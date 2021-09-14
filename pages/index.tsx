@@ -27,7 +27,7 @@ const Home: NextPage = () => {
   const CourseCard = (props : {name : string}) => {
 
     const nameParts = props.name.split("-");
-    nameParts.pop();
+    nameParts.shift();
 
     return (
         <Link href={`/${props.name}`}>
