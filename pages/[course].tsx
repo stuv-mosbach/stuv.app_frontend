@@ -100,7 +100,6 @@ const CoursePage: NextPage = () => {
             const currentDuration = moment.duration(moment().diff(lecture.endTime)).asSeconds();
             const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
             if (newPercentage !== percentage) setPercentage(newPercentage);
-            console.log(100 - currentDuration / duration * 100);
           } else {
             setRunning(false);
             clearInterval(interval);
@@ -120,27 +119,27 @@ const CoursePage: NextPage = () => {
           <div className="pt-2 grid grid-cols-2 gap-2">
 
             <div className="flex gap-2">
-              <CalendarIcon className={"text-gray-200 h-5 w-5"} />
+              <CalendarIcon className={"text-gray-200 h-5 w-5 flex-none"} />
               <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
             </div>
 
             { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
               <div className="flex gap-2 inline-block align-middle">
-                <UserIcon className={"text-gray-200 h-5 w-5"}/>
+                <UserIcon className={"text-gray-200 h-5 w-5 flex-none align-bottom"}/>
                 <span className={"flex-grow text-gray-200 truncate"}>{lecture.lecturer}</span>
               </div>
             }
 
             <div className="flex gap-2 inline-block align-middle">
-              <ClockIcon className={"text-gray-200 h-5 w-5"} />
+              <ClockIcon className={"text-gray-200 h-5 w-5 flex-none"} />
               <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
             </div>
 
             { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
-              <div className="flex gap-2 inline-block align-middle">
-                <HomeIcon className={"text-gray-200 h-5 w-5"} />
+            <div className="flex gap-2 inline-block align-middle">
+                <HomeIcon className={"text-gray-200 h-5 w-5 flex-none"}/>
                 <span className={"flex-grow text-gray-200 truncate"}>{lecture.rooms.join(", ")}</span>
-              </div>
+            </div>
             }
 
           </div>
@@ -192,7 +191,11 @@ const CoursePage: NextPage = () => {
 
           <div className={"w-full min-h-screen pb-7 flex flex-col items-center"}>
 
-            {lectures.map(g => <LectureSection key={g[0]?.date?.valueOf() ?? "upsi"} lectures={g} />)}
+            {lectures.map(g => {
+              const l0 = g[0];
+              const key = `${l0.date}-${l0.startTime}`;
+              return <LectureSection key={key ?? "upsi"} lectures={g} />;
+            })}
 
           </div>
         </div>
