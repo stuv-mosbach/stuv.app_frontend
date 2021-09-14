@@ -62,7 +62,6 @@ const CoursePage: NextPage = () => {
       axios.get<lectureType[]>(`${process.env.NEXT_PUBLIC_API_BASE}/rapla/lectures/${course}`).then(res => {
         setLectures(groupLectures(res.data));
         setLoading(false);
-
       }).catch(err => {
         console.log(err);
         router.push("/");
@@ -84,8 +83,37 @@ const CoursePage: NextPage = () => {
 
   const LectureCard = (props : {lecture : lectureType}) => {
     const {lecture} = props;
+    const [running, setRunning] = useState(moment().isBetween(lecture.startTime, lecture.endTime));
+
+    const [percentage, setPercentage] = useState<string>();
+
+    if (running) {
+      const duration = moment.duration(moment(lecture.startTime).diff(lecture.endTime)).asSeconds();
+
+      useEffect(() => {
+        setPercentage((100 - moment.duration(moment().diff(lecture.endTime)).asSeconds() / duration * 100).toFixed(2));
+
+        const interval = setInterval(() => {
+          const running = moment().isBetween(lecture.startTime, lecture.endTime);
+          if (running) {
+            setRunning(true);
+            const currentDuration = moment.duration(moment().diff(lecture.endTime)).asSeconds();
+            const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
+            if (newPercentage !== percentage) setPercentage(newPercentage);
+            console.log(100 - currentDuration / duration * 100);
+          } else {
+            setRunning(false);
+            clearInterval(interval);
+          }
+        }, 5 * 1000);
+
+        return () => {
+          clearInterval(interval);
+        }
+      }, [])
+    }
     return (
-      <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85", getColor(lecture))}>
+      <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85", getColor(lecture), running && percentage && "border border-sky-300")}>
 
         <div className={"divide-y divide-gray-500"}>
           <span className={"text-xl text-gray-100 "}>{lecture.name}</span>
@@ -93,23 +121,27 @@ const CoursePage: NextPage = () => {
 
             <div className="flex gap-2">
               <CalendarIcon className={"text-gray-200 h-5 w-5"} />
-              <span className={"text-gray-200 h-5"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
+              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
             </div>
 
-            <div className="flex gap-2 inline-block align-middle">
-              <UserIcon className={"text-gray-200 h-5 w-5"} />
-              <span className={"text-gray-200 h-5"}>{lecture.lecturer}</span>
-            </div>
+            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
+              <div className="flex gap-2 inline-block align-middle">
+                <UserIcon className={"text-gray-200 h-5 w-5"}/>
+                <span className={"flex-grow text-gray-200 truncate"}>{lecture.lecturer}</span>
+              </div>
+            }
 
             <div className="flex gap-2 inline-block align-middle">
               <ClockIcon className={"text-gray-200 h-5 w-5"} />
-              <span className={"text-gray-200 h-5"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")}</span>
+              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
             </div>
 
-            <div className="flex gap-2 inline-block align-middle">
-              <HomeIcon className={"text-gray-200 h-5 w-5"} />
-              <span className={"text-gray-200 h-5 truncate"}>{lecture.rooms.join(", ")}</span>
-            </div>
+            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
+              <div className="flex gap-2 inline-block align-middle">
+                <HomeIcon className={"text-gray-200 h-5 w-5"} />
+                <span className={"flex-grow text-gray-200 truncate"}>{lecture.rooms.join(", ")}</span>
+              </div>
+            }
 
           </div>
         </div>

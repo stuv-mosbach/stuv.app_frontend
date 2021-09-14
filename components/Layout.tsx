@@ -7,7 +7,7 @@ type Props = {
   title?: string
 }
 
-const Layout = ({children, title = 'This is the default title'}: Props) => {
+const Layout = ({children, title}: Props) => {
 
 /*  const darkMode = useSelector(selectDarkMode);
   const auth = useSelector(selectUserInfo)
@@ -17,7 +17,7 @@ const Layout = ({children, title = 'This is the default title'}: Props) => {
   return (
     <div className={classNames(true && ' dark',)}>
       <Head>
-        <title>{title} | {"StuV Vorlesungsplan"}</title>
+        <title>{title ? title + " |" : ""} StuV Vorlesungsplan</title>
         <meta charSet="utf-8"/>
         <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
