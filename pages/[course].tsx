@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {CalendarIcon, ClockIcon, HomeIcon, UserIcon} from "@heroicons/react/outline";
+import {CalendarIcon, ClockIcon, HomeIcon, ShareIcon, UserIcon} from "@heroicons/react/outline";
 import moment from "moment";
 import 'moment/locale/de'
 import Layout from "../components/Layout";
@@ -168,16 +168,25 @@ const CoursePage: NextPage = () => {
   return (
       <Layout title={course}>
 
-        <div className={"h-7 mb-2 ml-2 pt-3"}>
+        <div className={"h-7 mb-2 ml-2 pt-3 flex"}>
 
           <Link href={"/"}>
-            <div className={"flex flex-grow-0 w-24 pl-4 p-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700"}>
-              <ArrowLeftIcon className={"h-5 w-5 mt-1 text-gray-200"} />
-              <div className={""}>
-                <span className={"text-xl text-gray-200"}>Back</span>
-              </div>
+            <div className={"flex h-9 px-4 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700"}>
+              <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200"}>Back</span>
             </div>
           </Link>
+
+          <div onClick={() => window.navigator.share({
+            title: `${course} | Vorlesungsplan`,
+            url: window.location.href,
+            text: `Öffne diesen Link um die Vorlesung des Kurses '${course}' zu sehen.`
+          })} className={"flex flex-grow justify-end"}>
+            <div className="flex h-9 px-4 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700">
+              <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200"}>Share</span>
+            </div>
+          </div>
 
         </div>
 
