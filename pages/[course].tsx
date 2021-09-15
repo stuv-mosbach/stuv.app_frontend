@@ -58,6 +58,14 @@ const CoursePage: NextPage = () => {
   const [course, setCourse] = useState<string | undefined>(undefined);
   const [lectures, setLectures] = useState<lectureType[][]>([]);
   const [loading, setLoading] = useState(true);
+  const [allExpanded, setAllExpanded] = useState(false);
+
+  const [activeLecture, setActiveLecture] = useState<lectureType | undefined>();
+  const [percentage, setPercentage] = useState<string>();
+
+  const toggleAll = () => {
+    setAllExpanded(!allExpanded);
+  }
 
   useEffect(() => {
     if (router.isReady) {
@@ -77,6 +85,42 @@ const CoursePage: NextPage = () => {
     }
   }, [course]);
 
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+
+      const lactiveLecture = lectures.flatMap(l => l).find(l => moment().isBetween(l.startTime, l.endTime));
+
+      if (lactiveLecture) {
+        setActiveLecture(lactiveLecture);
+      } else {
+        setActiveLecture(undefined);
+        setPercentage(undefined);
+      }
+
+
+      if (activeLecture) {
+        const duration = moment.duration(moment(activeLecture.startTime).diff(activeLecture.endTime)).asSeconds();
+        const currentDuration = moment.duration(moment().diff(activeLecture.endTime)).asSeconds();
+        const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
+        if (newPercentage !== percentage) setPercentage(newPercentage);
+      }
+
+    }, 5 * 1000);
+
+    return () => {
+      clearInterval(interval);
+    }
+  }, [lectures, activeLecture]);
+
+  const share = () => {
+    window.navigator.share({
+      title: `${course} | Vorlesungsplan`,
+      url: window.location.href,
+      text: `Öffne diesen Link um die Vorlesung des Kurses '${course}' zu sehen.`
+    });
+  }
+
   const getColor = (lecture : lectureType) => {
     if (lecture.name.toLowerCase().includes("klausur") || lecture.name.toLowerCase().includes("prüfung")) {
       return "bg-red-800";
@@ -91,42 +135,25 @@ const CoursePage: NextPage = () => {
 
   const LectureCard = (props : {lecture : lectureType}) => {
     const {lecture} = props;
-    const [running, setRunning] = useState(moment().isBetween(lecture.startTime, lecture.endTime));
 
-    const [percentage, setPercentage] = useState<string>();
     const [expanded, setExpanded] = useState(false);
+
+    const running = activeLecture ? activeLecture.id === props.lecture.id : false;
 
     const expand = () => {
       setExpanded(!expanded);
-
     }
 
-    if (running) {
-      const duration = moment.duration(moment(lecture.startTime).diff(lecture.endTime)).asSeconds();
+    useEffect(() => {
+      setExpanded(allExpanded);
+    }, [allExpanded]);
 
-      useEffect(() => {
-        setPercentage((100 - moment.duration(moment().diff(lecture.endTime)).asSeconds() / duration * 100).toFixed(2));
-
-        const interval = setInterval(() => {
-          const running = moment().isBetween(lecture.startTime, lecture.endTime);
-          if (running) {
-            setRunning(true);
-            const currentDuration = moment.duration(moment().diff(lecture.endTime)).asSeconds();
-            const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
-            if (newPercentage !== percentage) setPercentage(newPercentage);
-          } else {
-            setRunning(false);
-            clearInterval(interval);
-          }
-        }, 5 * 1000);
-
-        return () => {
-          clearInterval(interval);
-        }
-      }, [])
-    }
     return (
-      <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85", getColor(lecture), running && percentage && "border border-sky-300")}>
+      <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85",
+        getColor(lecture),
+        running && percentage && "border border-sky-300",
+        "transform transition ease-in-out duration-200"
+      )}>
 
         <div className={"divide-y divide-gray-500"}>
           <div className="flex flex-grow">
@@ -140,7 +167,7 @@ const CoursePage: NextPage = () => {
               </div>
             </div>
           </div>
-          <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2", "transform transition ease-in-out duration-200")}>
+          <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2")}>
 
             <div className="flex gap-2">
               <CalendarIcon className={"text-gray-200 h-5 w-5 flex-none"} />
@@ -156,7 +183,7 @@ const CoursePage: NextPage = () => {
 
             <div className="flex gap-2 inline-block align-middle">
               <ClockIcon className={"text-gray-200 h-5 w-5 flex-none"} />
-              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
+              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && percentage && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
             </div>
 
             { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
@@ -195,20 +222,22 @@ const CoursePage: NextPage = () => {
         <div className={"h-7 mb-2 ml-2 pt-3 flex"}>
 
           <Link href={"/"}>
-            <div className={"flex h-9 px-4 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700"}>
+            <div className={"flex h-9 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none"}>
               <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-              <span className={"text-xl text-gray-200"}>Back</span>
+              <span className={"text-xl text-gray-200 hidden md:block"}>Back</span>
             </div>
           </Link>
 
-          <div onClick={() => window.navigator.share({
-            title: `${course} | Vorlesungsplan`,
-            url: window.location.href,
-            text: `Öffne diesen Link um die Vorlesung des Kurses '${course}' zu sehen.`
-          })} className={"flex flex-grow justify-end"}>
-            <div className="flex h-9 px-4 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700">
+          <div className={"flex flex-grow justify-end"}>
+            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
+              {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
+              {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
+              <span className={"text-xl text-gray-200 hidden md:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
+            </div>
+
+            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
               <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-              <span className={"text-xl text-gray-200"}>Share</span>
+              <span className={"text-xl text-gray-200 hidden md:block"}>Share</span>
             </div>
           </div>
 
