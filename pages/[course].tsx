@@ -2,7 +2,15 @@ import type { NextPage } from 'next'
 import {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {CalendarIcon, ClockIcon, HomeIcon, ShareIcon, UserIcon} from "@heroicons/react/outline";
+import {
+  CalendarIcon,
+  ChevronDownIcon,
+  ClockIcon,
+  HomeIcon,
+  ShareIcon, TemplateIcon,
+  UserIcon, ViewGridIcon,
+  ViewListIcon
+} from "@heroicons/react/outline";
 import moment from "moment";
 import 'moment/locale/de'
 import Layout from "../components/Layout";
@@ -86,6 +94,12 @@ const CoursePage: NextPage = () => {
     const [running, setRunning] = useState(moment().isBetween(lecture.startTime, lecture.endTime));
 
     const [percentage, setPercentage] = useState<string>();
+    const [expanded, setExpanded] = useState(false);
+
+    const expand = () => {
+      setExpanded(!expanded);
+
+    }
 
     if (running) {
       const duration = moment.duration(moment(lecture.startTime).diff(lecture.endTime)).asSeconds();
@@ -115,8 +129,18 @@ const CoursePage: NextPage = () => {
       <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85", getColor(lecture), running && percentage && "border border-sky-300")}>
 
         <div className={"divide-y divide-gray-500"}>
-          <span className={"text-xl text-gray-100 "}>{lecture.name}</span>
-          <div className="pt-2 grid grid-cols-2 gap-2">
+          <div className="flex flex-grow">
+            <span className={"text-xl text-gray-100"}>{lecture.name}</span>
+            <div className="flex flex-grow justify-end">
+              <div onClick={expand} className="hover:bg-gray-400 hover:bg-opacity-40 rounded-md text-gray-300 cursor-pointer p-1">
+                {/*<ChevronDownIcon
+                  className={classNames("w-7 h-7 transform transition ease-in-out duration-200", expanded && "rotate-180")}/>*/}
+                {!expanded && <ViewListIcon className={"w-5 h-5"} />}
+                {expanded && <ViewGridIcon className={"w-5 h-5"} />}
+              </div>
+            </div>
+          </div>
+          <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2", "transform transition ease-in-out duration-200")}>
 
             <div className="flex gap-2">
               <CalendarIcon className={"text-gray-200 h-5 w-5 flex-none"} />
