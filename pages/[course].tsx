@@ -73,10 +73,29 @@ const CoursePage: NextPage = () => {
     }
   }, [router.isReady]);
 
+  const updateActiveLecture = (lectures : lectureType[][]) => {
+    const lactiveLecture = lectures.flatMap(l => l).find(l => moment().isBetween(l.startTime, l.endTime));
+
+    if (lactiveLecture) {
+      setActiveLecture(lactiveLecture);
+
+      const duration = moment.duration(moment(lactiveLecture.startTime).diff(lactiveLecture.endTime)).asSeconds();
+      const currentDuration = moment.duration(moment().diff(lactiveLecture.endTime)).asSeconds();
+      const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
+      if (newPercentage !== percentage) setPercentage(newPercentage);
+
+    } else {
+      setActiveLecture(undefined);
+      setPercentage(undefined);
+    }
+  }
+
   useEffect(() => {
     if (course) {
       axios.get<lectureType[]>(`${process.env.NEXT_PUBLIC_API_BASE}/rapla/lectures/${course}`).then(res => {
-        setLectures(groupLectures(res.data));
+        const groupedLectures = groupLectures(res.data);
+        setLectures(groupedLectures);
+        updateActiveLecture(groupedLectures);
         setLoading(false);
       }).catch(err => {
         console.log(err);
@@ -89,22 +108,7 @@ const CoursePage: NextPage = () => {
 
     const interval = setInterval(() => {
 
-      const lactiveLecture = lectures.flatMap(l => l).find(l => moment().isBetween(l.startTime, l.endTime));
-
-      if (lactiveLecture) {
-        setActiveLecture(lactiveLecture);
-      } else {
-        setActiveLecture(undefined);
-        setPercentage(undefined);
-      }
-
-
-      if (activeLecture) {
-        const duration = moment.duration(moment(activeLecture.startTime).diff(activeLecture.endTime)).asSeconds();
-        const currentDuration = moment.duration(moment().diff(activeLecture.endTime)).asSeconds();
-        const newPercentage = (100 - currentDuration / duration * 100).toFixed(2);
-        if (newPercentage !== percentage) setPercentage(newPercentage);
-      }
+      if (lectures && lectures.length > 0) updateActiveLecture(lectures);
 
     }, 5 * 1000);
 
