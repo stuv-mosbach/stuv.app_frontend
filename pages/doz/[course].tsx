@@ -7,7 +7,7 @@ import {
   ChevronDownIcon,
   ClockIcon,
   HomeIcon,
-  ShareIcon, TemplateIcon,
+  ShareIcon, TemplateIcon, UserGroupIcon,
   UserIcon, ViewGridIcon,
   ViewListIcon
 } from "@heroicons/react/outline";
@@ -174,8 +174,8 @@ const CoursePage: NextPage = () => {
           <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2")}>
 
             <div className="flex gap-2">
-              <CalendarIcon className={"text-gray-200 h-5 w-5 flex-none"} />
-              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
+              <UserGroupIcon className={"text-gray-200 h-5 w-5 flex-none"} />
+              <span className={"flex-grow text-gray-200 truncate"}>{lecture.course}</span>
             </div>
 
             { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
