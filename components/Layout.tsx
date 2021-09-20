@@ -15,12 +15,12 @@ const Layout = ({children, title}: Props) => {
 
 
   return (
-    <html lang={"de"} className={classNames('dark',)}>
+    <div className={classNames('dark')}>
       <Head>
         <title>{title ? title + " |" : ""} StuV Vorlesungsplan</title>
         <meta charSet="utf-8"/>
         <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
-        <meta name="description" content="Vorlesungsplan der DHBW-Mosbach und Bad Mergentheim an." />
+        <meta name="description" content="Vorlesungsplan der DHBW-Mosbach und Bad Mergentheim." />
         <meta name="theme-color" content="#9e1010"/>
 
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -37,7 +37,7 @@ const Layout = ({children, title}: Props) => {
         </div>
 
       </main>
-    </html>
+    </div>
   )
 };
 
