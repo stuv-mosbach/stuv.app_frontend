@@ -1,11 +1,11 @@
 import type { NextPage } from 'next'
 import {useRouter} from "next/router";
-import React, {useEffect, useState} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
   CalendarIcon,
   ChevronDownIcon,
-  ClockIcon,
+  ClockIcon, FilterIcon,
   HomeIcon,
   ShareIcon, TemplateIcon,
   UserIcon, ViewGridIcon,
@@ -17,6 +17,7 @@ import Layout from "../components/Layout";
 import classNames from "classnames";
 import {ArrowLeftIcon} from "@heroicons/react/solid";
 import Link from 'next/link';
+import { Transition } from '@headlessui/react'
 
 interface lectureType {
   id?: number,
@@ -63,9 +64,25 @@ const CoursePage: NextPage = () => {
   const [activeLecture, setActiveLecture] = useState<lectureType | undefined>();
   const [percentage, setPercentage] = useState<string>();
 
+  const filterRef = React.useRef<HTMLDivElement>(null);
+  const [showFilter, setShowFilter] = useState(false);
+
   const toggleAll = () => {
     setAllExpanded(!allExpanded);
   }
+
+  useEffect(() => {
+    // Detect a click outside the SideMenu
+    const listener = (event: Event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setShowFilter(false);
+      }
+    };
+    document.addEventListener("click", listener, true);
+    return () => {
+      document.removeEventListener("click", listener);
+    };
+  }, []);
 
   useEffect(() => {
     if (router.isReady) {
@@ -116,6 +133,10 @@ const CoursePage: NextPage = () => {
       clearInterval(interval);
     }
   }, [lectures, activeLecture]);
+
+  const openFilter = () => {
+    setShowFilter(true);
+  }
 
   const share = () => {
     window.navigator.share({
@@ -220,6 +241,14 @@ const CoursePage: NextPage = () => {
     )
   }
 
+  const MenuItem = (props: { content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
+      <span onClick={() => {
+        //setShowFilter(false);
+        if (props.onClick) props.onClick();
+      }}
+            className={"select-none cursor-pointer block px-4 py-2 text-sm dark:text-white text-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform " + props.rounded}>{props.content}</span>
+  );
+
   return (
       <Layout title={course}>
 
@@ -233,6 +262,33 @@ const CoursePage: NextPage = () => {
           </Link>
 
           <div className={"flex flex-grow justify-end"}>
+
+            <div onClick={openFilter} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
+              <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200 hidden md:block"}>Filter</span>
+
+              <div ref={filterRef} className={"origin-top-right absolute mt-8 -ml-28 w-48 rounded-md shadow-2xl bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"}>
+                <Transition
+                    show={showFilter}
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                >
+                  <div className="">
+                    <MenuItem content={"Ihr Profil"} rounded={"rounded-t-md"} />
+                    <MenuItem content={"Startseite"} onClick={() => console.log("")} />
+                    <MenuItem content={"Abmelden"} onClick={() => {
+                    }} rounded={"rounded-b-md"} />
+                  </div>
+                </Transition>
+              </div>
+
+            </div>
+
             <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
               {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
