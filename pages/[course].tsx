@@ -134,7 +134,12 @@ const CoursePage: NextPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      setCourse(router.query.course as string);
+      const course = router.query.course as string;
+      setCourse(course);
+      const raw = localStorage.getItem("openedCourses");
+      let courseList = JSON.parse(raw ? raw : "{}");
+      courseList[course] = true;
+      localStorage.setItem("openedCourses", JSON.stringify(courseList));
     }
   }, [router.isReady]);
 

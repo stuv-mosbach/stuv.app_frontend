@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/router";
+import classNames from "classnames";
 
 const Home: NextPage = () => {
 
@@ -12,6 +13,7 @@ const Home: NextPage = () => {
 
   const [courses, setCourses] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [courseList, setCourseList] = useState<{[key : string]: boolean}>({});
 
   useEffect(() => {
     if (router.isReady) {
@@ -21,6 +23,9 @@ const Home: NextPage = () => {
       }).catch(err => {
         console.log(err);
       });
+      const raw = localStorage.getItem("openedCourses");
+      let courseList = JSON.parse(raw ? raw : "{}");
+      setCourseList(courseList);
     }
   }, [router.isReady]);
 
@@ -29,9 +34,11 @@ const Home: NextPage = () => {
     const nameParts = props.name.split("-");
     nameParts.shift();
 
+    console.log(courseList);
+
     return (
         <Link href={`/${props.name}`}>
-          <div className="bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-blueGray-500">
+          <div className={classNames("bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-blueGray-500", courseList[props.name] && "border border-sky-300")}>
             <span className="text-xl text-gray-200">{nameParts.join("-")}</span>
           </div>
         </Link>
