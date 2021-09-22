@@ -50,7 +50,7 @@ const Home: NextPage = () => {
             <div className="">
 
               <div className={"mt-3"}>
-                <div className={"gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4"}>
+                <div className={"gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
                   {courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course} /> )}
                 </div>
               </div>
