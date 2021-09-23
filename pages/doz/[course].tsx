@@ -272,11 +272,20 @@ const CoursePage: NextPage = () => {
               <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && percentage && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
             </div>
 
-            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
+            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && !expanded &&
             <div className="flex gap-2 inline-block align-middle">
                 <HomeIcon className={"text-gray-200 h-5 w-5 flex-none"}/>
                 <span className={"flex-grow text-gray-200 truncate"}>{lecture.rooms.join(", ")}</span>
             </div>
+            }
+
+            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && expanded &&
+            lecture.rooms.map(r => (
+              <div className="flex gap-2 inline-block align-middle" key={r}>
+                <HomeIcon className={"text-gray-200 h-5 w-5 flex-none"}/>
+                <span className={"flex-grow text-gray-200 truncate"}>{r}</span>
+              </div>
+            ))
             }
 
           </div>
