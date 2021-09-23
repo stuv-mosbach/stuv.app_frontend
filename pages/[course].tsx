@@ -133,13 +133,18 @@ const CoursePage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (router.isReady) {
-      const course = router.query.course as string;
-      setCourse(course);
-      const raw = localStorage.getItem("openedCourses");
-      let courseList = JSON.parse(raw ? raw : "{}");
-      courseList[course] = true;
-      localStorage.setItem("openedCourses", JSON.stringify(courseList));
+    try {
+      if (router.isReady) {
+        const course = router.query.course as string;
+        setCourse(course);
+        const raw = localStorage.getItem("openedCourses");
+        let courseList = JSON.parse(raw ? raw : "{}");
+        courseList[course] = true;
+        localStorage.setItem("openedCourses", JSON.stringify(courseList));
+      }
+    } catch (e) {
+      console.log("Failed to set openedCourses");
+      console.log(e);
     }
   }, [router.isReady]);
 

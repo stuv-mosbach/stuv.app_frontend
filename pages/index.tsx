@@ -23,9 +23,14 @@ const Home: NextPage = () => {
       }).catch(err => {
         console.log(err);
       });
-      const raw = localStorage.getItem("openedCourses");
-      let courseList = JSON.parse(raw ? raw : "{}");
-      setCourseList(courseList);
+      try {
+        const raw = localStorage.getItem("openedCourses");
+        let courseList = JSON.parse(raw ? raw : "{}");
+        setCourseList(courseList);
+      }  catch (e) {
+        console.log("Failed to read openedCourses");
+        console.log(e);
+      }
     }
   }, [router.isReady]);
 
