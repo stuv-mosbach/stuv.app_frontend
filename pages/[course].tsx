@@ -248,7 +248,9 @@ const CoursePage: NextPage = () => {
         getLectureColor(lecture),
         running && percentage && "border border-sky-300",
         "transform transition ease-in-out duration-200"
-      )}>
+      )}
+        onClick={expand}
+      >
 
         <div className={"divide-y divide-gray-500"}>
           <div className="flex flex-grow">
@@ -339,10 +341,10 @@ const CoursePage: NextPage = () => {
   return (
       <Layout title={course}>
 
-        <div className={"h-7 mb-2 ml-2 pt-3 flex"}>
+        <div className={"mb-2 py-2 flex sticky top-0 z-50 bg-gradient-to-r from-teal-600 via-indigo-600 to-teal-500 rounded-b-xl"}>
 
           <Link href={"/"}>
-            <div className={"flex h-9 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none"}>
+            <div className={"flex ml-2 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-400 hover:bg-opacity-70 select-none"}>
               <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden md:block"}>Back</span>
             </div>
@@ -350,7 +352,7 @@ const CoursePage: NextPage = () => {
 
           <div className={"flex flex-grow justify-end"}>
 
-            <div onClick={openFilter} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
+            <div onClick={openFilter} className="flex px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-400 hover:bg-opacity-70 select-none" >
               <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden md:block"}>Filter</span>
 
@@ -384,13 +386,13 @@ const CoursePage: NextPage = () => {
 
             </div>
 
-            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
+            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-400 hover:bg-opacity-70 select-none" >
               {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               <span className={"text-xl text-gray-200 hidden md:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
             </div>
 
-            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
+            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-400 hover:bg-opacity-70 select-none" >
               <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden md:block"}>Share</span>
             </div>
@@ -404,9 +406,9 @@ const CoursePage: NextPage = () => {
           </div>
         }
 
-          <div className="container mx-auto">
+        <div className="container mx-auto">
 
-          <div className={"w-full min-h-screen pb-7 flex flex-col items-center"}>
+          <div style={{maxHeight: "calc(100vh - 52px - 8px)"}} className={"w-full pb-7 items-center overflow-y-scroll scroll-hidden"}>
 
             {filteredLectures.map(g => {
               const l0 = g[0];

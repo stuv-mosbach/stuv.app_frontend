@@ -37,3 +37,10 @@
 ::-webkit-scrollbar-thumb:hover {
     background: none;
 }
+
+.scroll-hidden::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+    background: transparent; /* make scrollbar transparent */
+    scrollbar-width: none;
+}
