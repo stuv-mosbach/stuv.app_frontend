@@ -12,6 +12,8 @@ import Link from 'next/link';
 import {Transition} from '@headlessui/react'
 import {filterType, formatCourseName, getLectureType, groupLectures, lectureType} from "../util/lectureUtils";
 import {LectureSection} from "../components/LectureSection";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {getNextNElements} from "../util/arrayUtils";
 
 const CoursePage: NextPage = () => {
 
@@ -22,6 +24,7 @@ const CoursePage: NextPage = () => {
   const [course, setCourse] = useState<string | undefined>(undefined);
   const [originalLectures, setOriginalLectures] = useState<lectureType[][]>([]);
   const [filteredLectures, setFilteredLectures] = useState<lectureType[][]>([]);
+  const [visibleLectures, setVisibleLectures] = useState<lectureType[][]>([]);
   const [loading, setLoading] = useState(true);
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -58,14 +61,22 @@ const CoursePage: NextPage = () => {
       const filter = getFilteredTypes();
       if (filter.length === 0) {
         setFilteredLectures(lectures);
+        setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
         return;
       }
       const filtered = lectures.map(subl => subl.filter(l => {
         return filter.indexOf(getLectureType(l)) !== -1;
       })).filter(l => l.length > 0);
       setFilteredLectures(filtered);
+      setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
     }
   }
+
+  const nextScrollLectures = () => {
+    setVisibleLectures(getNextNElements(15, filteredLectures, [...visibleLectures]));
+  }
+
+  const hasMoreToScroll = () => filteredLectures.length > visibleLectures.length;
 
   useEffect(() => {
     updateFilter();
@@ -252,17 +263,54 @@ const CoursePage: NextPage = () => {
           </div>
         }
 
-        <div className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900" style={{maxHeight: "calc(100vh - 52px)"}}>
+        <div
+           id={"scrollableDiv"}
+           className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900"
+           style={{height: "calc(100vh - 52px)"}}
+        >
 
           <div className="container mx-auto">
 
             <div className={"flex flex-col pb-7 items-center"}>
 
-              {filteredLectures.map(g => {
+              {/*{filteredLectures.map(g => {
                 const l0 = g[0];
                 const key = `${l0.date}-${l0.startTime}`;
                 return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture} allExpanded={allExpanded} percentage={percentage} />;
-              })}
+              })}*/}
+
+              <InfiniteScroll
+                  style={{}}
+                  dataLength={visibleLectures.length}
+                  next={nextScrollLectures}
+                  hasMore={hasMoreToScroll()}
+                  loader={<div className={"flex py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                    <span className={"w-full text-center text-gray-200"}>Lade weitere Vorlesungen</span>
+                  </div>}
+                  endMessage={
+                    <div className={"flex py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                      <span className={"w-full text-center text-gray-200"}>Keine weiteren Vorlesungen Verfügbar</span>
+                    </div>
+                  }
+/*                  pullDownToRefresh={true}
+                  refreshFunction={() => {}}
+                  pullDownToRefreshContent={
+                    <div className={"flex bg-green-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                      <span className={"w-full text-center text-gray-200"}>Aktualisieren</span>
+                    </div>
+                  }
+                  releaseToRefreshContent={                    <div className={"flex bg-green-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                    <span className={"w-full text-center text-gray-200"}>LADEN</span>
+                  </div>}*/
+
+                  scrollableTarget={"scrollableDiv"}
+              >
+                {visibleLectures.map(g => {
+                  const l0 = g[0];
+                  const key = `${l0.date}-${l0.startTime}`;
+                  return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture} allExpanded={allExpanded} percentage={percentage} />;
+                })}
+              </InfiniteScroll>
 
             </div>
           </div>

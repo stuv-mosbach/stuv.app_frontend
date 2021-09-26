@@ -13,7 +13,7 @@ interface IProps {
 export const LectureSection = (props: IProps) => {
 
   return (
-      <div className={"mt-3 divide-gray-500 divide-y w-full lg:w-3/4 xl:w-2/4"}>
+      <div className={"mt-3 divide-gray-500 divide-y w-full"}>
         <span
             className={"text-gray-200 text-4xl font-light select-none"}>{moment(props.lectures[0].date).locale("de").format("dddd - DD.MM.YYYY")}</span>
         <div className="">

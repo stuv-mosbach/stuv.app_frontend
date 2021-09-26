@@ -4,15 +4,19 @@ import classNames from "classnames";
 
 type Props = {
   children?: ReactNode
-  title?: string
+  title?: string,
+  disablePullToRefresh?: boolean
 }
 
-const Layout = ({children, title}: Props) => {
+const Layout = ({children, title, disablePullToRefresh}: Props) => {
 
   /*  const darkMode = useSelector(selectDarkMode);
     const auth = useSelector(selectUserInfo)
     const dispatch = useDispatch();*/
 
+
+  let style = {};
+  if (disablePullToRefresh) style = {overscrollBehaviorY: "contain"};
 
   return (
       <div className={classNames('dark')}>
@@ -43,7 +47,7 @@ const Layout = ({children, title}: Props) => {
         </Head>
         <header>
         </header>
-        <main className="bg-gradient-to-b from-gray-900 to-blueGray-900">
+        <main className="bg-gradient-to-b from-gray-900 to-blueGray-900" style={style}>
 
           <div className="">
             {children}
