@@ -8,8 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "docker:build": "docker build -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.0.1 .",
+    "docker:build:beta": "docker build -t maxdola/stuv.app_frontend:beta -t maxdola/stuv.app_frontend:0.0.2 .",
     "docker:push": "docker push maxdola/stuv.app_frontend --all-tags",
-    "docker:run": "yarn docker:build && yarn docker:push"
+    "docker:run": "yarn docker:build && yarn docker:push",
+    "docker:run:beta": "yarn docker:build:beta && yarn docker:push"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.1",
