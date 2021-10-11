@@ -38,8 +38,6 @@ const Home: NextPage = () => {
     const nameParts = props.name.split("-");
     nameParts.shift();
 
-    console.log(courseList);
-
     return (
         <Link href={`/${props.name}`}>
           <div
