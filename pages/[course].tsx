@@ -280,30 +280,20 @@ const CoursePage: NextPage = () => {
               })}*/}
 
               <InfiniteScroll
-                  style={{}}
-                  dataLength={visibleLectures.length}
-                  next={nextScrollLectures}
-                  hasMore={hasMoreToScroll()}
-                  loader={<div className={"flex py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
-                    <span className={"w-full text-center text-gray-200"}>Lade weitere Vorlesungen</span>
-                  </div>}
-                  endMessage={
-                    <div className={"flex py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl"}>
-                      <span className={"w-full text-center text-gray-200"}>Keine weiteren Vorlesungen Verfügbar</span>
-                    </div>
-                  }
-/*                  pullDownToRefresh={true}
-                  refreshFunction={() => {}}
-                  pullDownToRefreshContent={
-                    <div className={"flex bg-green-300 rounded-xl bg-opacity-30 shadow-2xl"}>
-                      <span className={"w-full text-center text-gray-200"}>Aktualisieren</span>
-                    </div>
-                  }
-                  releaseToRefreshContent={                    <div className={"flex bg-green-300 rounded-xl bg-opacity-30 shadow-2xl"}>
-                    <span className={"w-full text-center text-gray-200"}>LADEN</span>
-                  </div>}*/
-
-                  scrollableTarget={"scrollableDiv"}
+                className={"flex-grow"}
+                style={{width: "100vw"}}
+                dataLength={visibleLectures.length}
+                next={nextScrollLectures}
+                hasMore={hasMoreToScroll()}
+                loader={<div className={"flex w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                  <span className={"w-full text-center text-gray-200"}>Lade weitere Vorlesungen</span>
+                </div>}
+                endMessage={
+                  <div className={"w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl flex"}>
+                    <span className={"w-full text-center text-gray-200"}>Keine weiteren Vorlesungen Verfügbar</span>
+                  </div>
+                }
+                scrollableTarget={"scrollableDiv"}
               >
                 {visibleLectures.map(g => {
                   const l0 = g[0];
