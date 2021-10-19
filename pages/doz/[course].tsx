@@ -18,44 +18,10 @@ import classNames from "classnames";
 import {ArrowLeftIcon} from "@heroicons/react/solid";
 import Link from 'next/link';
 import { Transition } from '@headlessui/react'
-
-interface lectureType {
-  id?: number,
-  date: Date,
-  startTime: Date,
-  endTime: Date,
-  name: string,
-  type: "PRESENCE" | "ONLINE" | "HYBRID",
-  lecturer: string,
-  rooms: string[],
-  course: string,
-  used?: boolean,
-}
-
-interface filterType {
-  normal?: boolean;
-  online?: boolean;
-  test?: boolean;
-  free?: boolean;
-}
-
-const groupLectures = (lectures : lectureType[]) => {
-  const grouped : lectureType[][] = [];
-  if (lectures.length === 0) return [];
-  let date = lectures[0].date;
-  let list : lectureType[] = [];
-  lectures.forEach(l => {
-    if (date.valueOf() === l.date.valueOf()) {
-      list.push(l);
-    } else {
-      grouped.push(list);
-      list = [l];
-      date = l.date;
-    }
-  })
-  grouped.push(list);
-  return grouped;
-}
+import {filterType, formatCourseName, getLectureType, groupLectures, lectureType} from "../../util/lectureUtils";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {LectureSection} from "../../components/LectureSection";
+import {getNextNElements} from "../../util/arrayUtils";
 
 const CoursePage: NextPage = () => {
 
@@ -66,6 +32,7 @@ const CoursePage: NextPage = () => {
   const [course, setCourse] = useState<string | undefined>(undefined);
   const [originalLectures, setOriginalLectures] = useState<lectureType[][]>([]);
   const [filteredLectures, setFilteredLectures] = useState<lectureType[][]>([]);
+  const [visibleLectures, setVisibleLectures] = useState<lectureType[][]>([]);
   const [loading, setLoading] = useState(true);
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -102,14 +69,22 @@ const CoursePage: NextPage = () => {
       const filter = getFilteredTypes();
       if (filter.length === 0) {
         setFilteredLectures(lectures);
+        setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
         return;
       }
       const filtered = lectures.map(subl => subl.filter(l => {
         return filter.indexOf(getLectureType(l)) !== -1;
       })).filter(l => l.length > 0);
       setFilteredLectures(filtered);
+      setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
     }
   }
+
+  const nextScrollLectures = () => {
+    setVisibleLectures(getNextNElements(15, filteredLectures, [...visibleLectures]));
+  }
+
+  const hasMoreToScroll = () => filteredLectures.length > visibleLectures.length;
 
   useEffect(() => {
     updateFilter();
@@ -133,9 +108,18 @@ const CoursePage: NextPage = () => {
   }, []);
 
   useEffect(() => {
-    if (router.isReady) {
-      const course = router.query.course as string;
-      setCourse(course);
+    try {
+      if (router.isReady) {
+        const course = router.query.course as string;
+        setCourse(course);
+        const raw = localStorage.getItem("openedCourses");
+        let courseList = JSON.parse(raw ? raw : "{}");
+        courseList[course] = true;
+        localStorage.setItem("openedCourses", JSON.stringify(courseList));
+      }
+    } catch (e) {
+      console.log("Failed to set openedCourses");
+      console.log(e);
     }
   }, [router.isReady]);
 
@@ -155,7 +139,6 @@ const CoursePage: NextPage = () => {
       setPercentage(undefined);
     }
   }
-
   useEffect(() => {
     if (course) {
       axios.get<lectureType[]>(`${process.env.NEXT_PUBLIC_API_BASE}/rapla/lecturer/${course}`).then(res => {
@@ -188,11 +171,15 @@ const CoursePage: NextPage = () => {
   }
 
   const share = () => {
-    window.navigator.share({
-      title: `${course} | Vorlesungsplan`,
-      url: window.location.href,
-      text: `Öffne diesen Link um die Vorlesung des Kurses '${course}' zu sehen.`
-    });
+    try {
+      window.navigator.share({
+        title: `${course} | Vorlesungsplan`,
+        url: window.location.href,
+        text: `Öffne diesen Link um die Vorlesung des Kurses '${course}' zu sehen.`
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   const getLectureColor = (lecture : lectureType) => {
@@ -219,104 +206,13 @@ const CoursePage: NextPage = () => {
     return "normal";
   }
 
-  const LectureCard = (props : {lecture : lectureType}) => {
-    const {lecture} = props;
-
-    const [expanded, setExpanded] = useState(false);
-
-    const running = activeLecture ? activeLecture.id === props.lecture.id : false;
-
-    const expand = () => {
-      setExpanded(!expanded);
-    }
-
-    useEffect(() => {
-      setExpanded(allExpanded);
-    }, [allExpanded]);
-
-    return (
-      <div className={classNames("rounded-xl shadow-2xl py-2 px-4 mt-4 bg-opacity-85",
-        getLectureColor(lecture),
-        running && percentage && "border border-sky-300",
-        "transform transition ease-in-out duration-200"
-      )}>
-
-        <div className={"divide-y divide-gray-500"}>
-          <div className="flex flex-grow">
-            <span className={"text-xl text-gray-100"}>{lecture.name}</span>
-            <div className="flex flex-grow justify-end">
-              <div onClick={expand} className="hover:bg-gray-400 hover:bg-opacity-40 rounded-md text-gray-300 cursor-pointer p-1">
-                {/*<ChevronDownIcon
-                  className={classNames("w-7 h-7 transform transition ease-in-out duration-200", expanded && "rotate-180")}/>*/}
-                {!expanded && <ViewListIcon className={"w-5 h-5"} />}
-                {expanded && <ViewGridIcon className={"w-5 h-5"} />}
-              </div>
-            </div>
-          </div>
-          <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2")}>
-
-            <div className="flex gap-2">
-              <CalendarIcon className={"text-gray-200 h-5 w-5 flex-none"} />
-              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
-            </div>
-
-            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
-            <div className="flex gap-2 inline-block align-middle">
-                <UserIcon className={"text-gray-200 h-5 w-5 flex-none align-bottom"}/>
-                <span className={"flex-grow text-gray-200 truncate"}>{lecture.lecturer}</span>
-            </div>
-            }
-
-            <div className="flex gap-2 inline-block align-middle">
-              <ClockIcon className={"text-gray-200 h-5 w-5 flex-none"} />
-              <span className={"flex-grow text-gray-200 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && percentage && <span className={"text-gray-500"}>{percentage + " %"}</span>}</span>
-            </div>
-
-            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && !expanded &&
-            <div className="flex gap-2 inline-block align-middle">
-                <HomeIcon className={"text-gray-200 h-5 w-5 flex-none"}/>
-                <span className={"flex-grow text-gray-200 truncate"}>{lecture.rooms.join(", ")}</span>
-            </div>
-            }
-
-            { lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && expanded &&
-            lecture.rooms.map(r => (
-              <div className="flex gap-2 inline-block align-middle" key={r}>
-                <HomeIcon className={"text-gray-200 h-5 w-5 flex-none"}/>
-                <span className={"flex-grow text-gray-200 truncate"}>{r}</span>
-              </div>
-            ))
-            }
-
-          </div>
-        </div>
-
-      </div>
-    )
-  }
-
-  const LectureSection = (props : {lectures : lectureType[]}) => {
-
-    return (
-      <div className={"mt-3 divide-gray-500 divide-y w-full lg:w-3/4 xl:w-2/4"}>
-        <span className={"text-gray-200 text-4xl font-light"}>{moment(props.lectures[0].date).locale("de").format("dddd - DD.MM.YYYY")}</span>
-        <div className="">
-
-          <div className={"mt-3"}>
-            {props.lectures.map(l => <LectureCard key={l.id} lecture={l} />)}
-          </div>
-
-        </div>
-      </div>
-    )
-  }
 
   const MenuItem = (props: { checked: boolean, content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
     <div onClick={() => {if (props.onClick) props.onClick();}}
-      //dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform cursor-pointer
+        //dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform cursor-pointer
          className={classNames(
-           "block text-sm dark:text-white text-gray-700 cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform",
-           props.rounded,
+             "block text-sm dark:text-white text-gray-700 cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform",
+             props.rounded,
          )}>
       <label className="inline-flex items-center h-full w-full cursor-pointer">
         <div className="px-4 py-2">
@@ -328,86 +224,126 @@ const CoursePage: NextPage = () => {
   );
 
   return (
-    <Layout title={course}>
+      <Layout title={course}>
 
-      <div className={"h-7 mb-2 ml-2 pt-3 flex"}>
+        <div className={"py-2 flex sticky top-0 z-40 bg-gradient-to-r from-teal-600 via-indigo-600 to-teal-500 rounded-b-xl"}>
 
-        <Link href={"/"}>
-          <div className={"flex h-9 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none"}>
-            <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-            <span className={"text-xl text-gray-200 hidden md:block"}>Back</span>
+          <div className="absolute z-50 left-1/2 transform -translate-x-1/2 -translate-y-2">
+            <div className="flex flex-grow justify-center">
+              <div className="{/*bg-gradient-to-b to-teal-600 from-indigo-600*/} bg-opacity-30 bg-gray-900    pt-2 pb-3 px-8 rounded-xl">
+                <span className={"text-gray-200 text-2xl font-semibold select-none"}>DOZ: {course}</span>
+              </div>
+            </div>
           </div>
-        </Link>
 
-        <div className={"flex flex-grow justify-end"}>
+          <Link href={"/"}>
+            <div className={"flex ml-2 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200"}>
+              <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200 hidden lg:block"}>Back</span>
+            </div>
+          </Link>
 
-          <div onClick={openFilter} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
-            <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-            <span className={"text-xl text-gray-200 hidden md:block"}>Filter</span>
+          <div className={"flex flex-grow justify-end"}>
 
-            <div ref={filterRef} className={"origin-top-right absolute mt-8 -ml-28 w-48 rounded-md shadow-2xl bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"}>
-              <Transition
-                show={showFilter}
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <div className="">
-                  <MenuItem checked={getFilter("normal")} content={"Vorlesungen"} rounded={"rounded-t-md"}  onClick={() => {
-                    toggleFilter("normal");
-                  }} />
-                  <MenuItem checked={getFilter("online")}  content={"Online-Vorlesungen"}  onClick={() => {
-                    toggleFilter("online");
-                  }} />
-                  <MenuItem checked={getFilter("test")}  content={"Prüfungen"}  onClick={() => {
-                    toggleFilter("test");
-                  }} />
-                  <MenuItem checked={getFilter("free")}  content={"Freie Tage"} onClick={() => {
-                    toggleFilter("free");
-                  }} rounded={"rounded-b-md"} />
-                </div>
-              </Transition>
+            <div onClick={openFilter} className="flex px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+              <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200 hidden lg:block"}>Filter</span>
+
+              <div ref={filterRef} className={"origin-top-right absolute mt-8 -ml-28 w-48 rounded-md bg-white dark:bg-gray-700 focus:outline-none z-50"}>
+                <Transition
+                    show={showFilter}
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                >
+                  <div className="">
+                    <MenuItem checked={getFilter("normal")} content={"Vorlesungen"} rounded={"rounded-t-md"}  onClick={() => {
+                      toggleFilter("normal");
+                    }} />
+                    <MenuItem checked={getFilter("online")}  content={"Online-Vorlesungen"}  onClick={() => {
+                      toggleFilter("online");
+                    }} />
+                    <MenuItem checked={getFilter("test")}  content={"Prüfungen"}  onClick={() => {
+                      toggleFilter("test");
+                    }} />
+                    <MenuItem checked={getFilter("free")}  content={"Freie Tage"} onClick={() => {
+                      toggleFilter("free");
+                    }} rounded={"rounded-b-md"} />
+                  </div>
+                </Transition>
+              </div>
+
             </div>
 
+            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+              {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
+              {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
+              <span className={"text-xl text-gray-200 hidden lg:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
+            </div>
+
+            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+              <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200 hidden lg:block"}>Share</span>
+            </div>
           </div>
 
-          <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
-            {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
-            {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
-            <span className={"text-xl text-gray-200 hidden md:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
-          </div>
-
-          <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 select-none" >
-            <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-            <span className={"text-xl text-gray-200 hidden md:block"}>Share</span>
-          </div>
         </div>
 
-      </div>
-
-      {loading &&
-      <div className={"flex flex-col flex-grow justify-center items-center min-h-screen"}>
+        {loading &&
+        <div className={"flex flex-col flex-grow justify-center items-center min-h-screen"}>
           <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"/>
-      </div>
-      }
+        </div>
+        }
 
-      <div className="container mx-auto">
+        <div
+            id={"scrollableDiv"}
+            className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900"
+            style={{height: "calc(100vh - 52px)"}}
+        >
 
-        <div className={"w-full min-h-screen pb-7 flex flex-col items-center"}>
+          <div className="container mx-auto">
 
-          {filteredLectures.map(g => {
-            const l0 = g[0];
-            const key = `${l0.date}-${l0.startTime}`;
-            return <LectureSection key={key ?? "upsi"} lectures={g} />;
-          })}
+            <div className={"flex flex-col pb-7 items-center"}>
+
+              {/*{filteredLectures.map(g => {
+                const l0 = g[0];
+                const key = `${l0.date}-${l0.startTime}`;
+                return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture} allExpanded={allExpanded} percentage={percentage} />;
+              })}*/}
+
+              <InfiniteScroll
+                  className={"flex-grow"}
+                  style={{width: "100vw"}}
+                  dataLength={visibleLectures.length}
+                  next={nextScrollLectures}
+                  hasMore={hasMoreToScroll()}
+                  loader={<div className={"flex w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                    <span className={"w-full text-center text-gray-200"}>Lade weitere Vorlesungen</span>
+                  </div>}
+                  endMessage={
+                    <div className={"w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl flex"}>
+                      <span className={"w-full text-center text-gray-200"}>Keine weiteren Vorlesungen Verfügbar</span>
+                    </div>
+                  }
+                  scrollableTarget={"scrollableDiv"}
+              >
+                {visibleLectures.map(g => {
+                  const l0 = g[0];
+                  const key = `${l0.date}-${l0.startTime}`;
+                  return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture} allExpanded={allExpanded} percentage={percentage} />;
+                })}
+              </InfiniteScroll>
+
+            </div>
+          </div>
 
         </div>
-      </div>
-    </Layout>
+
+      </Layout>
   )
 }
 

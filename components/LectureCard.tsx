@@ -55,7 +55,7 @@ export const LectureCard = (props: IProps) => {
               <span className={"flex-grow text-gray-300 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
             </div>
 
-            {lecture.lecturer?.length > 0 && lecture.rooms.length > 0 &&
+            {lecture.lecturer?.length > 0 &&
             <div className="flex gap-2 inline-block align-middle">
               <UserIcon className={"text-gray-300 h-5 w-5 flex-none align-bottom bg-"}/>
               <span className={"flex-grow text-gray-300 truncate"}>{lecture.lecturer}</span>
@@ -69,14 +69,14 @@ export const LectureCard = (props: IProps) => {
               <span className={"text-gray-500"}>{props.percentage + " %"}</span>}</span>
             </div>
 
-            {lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && !expanded &&
+            {lecture.rooms.length > 0 && !expanded &&
             <div className="flex gap-2 inline-block align-middle">
               <HomeIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
               <span className={"flex-grow text-gray-300 truncate"}>{lecture.rooms.join(", ")}</span>
             </div>
             }
 
-            {lecture.lecturer?.length > 0 && lecture.rooms.length > 0 && expanded &&
+            {lecture.rooms.length > 0 && expanded &&
             lecture.rooms.map(r => (
                 <div className="flex gap-2 inline-block align-middle" key={r}>
                   <HomeIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
