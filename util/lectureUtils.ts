@@ -1,3 +1,5 @@
+import {string} from "prop-types";
+
 export interface lectureType {
   id?: number,
   date: Date,
@@ -66,4 +68,84 @@ export const formatCourseName = (name : string) : string => {
   const parts = name.split("-");
   parts.shift();
   return parts.join("-");
+}
+
+const nameMap = {
+  "TWIW": "Wirtschaftsingenieurwesen",
+  "TMT": "Mechatronik",
+  "TFS": "Fassadentechnik",
+  "TMB": "Maschinenbau",
+  "THT": "Holztechnik",
+  "TPM": "Projektmanagement",
+  "TINF": "Angewandte Informatik",
+  "TET": "Elektrotechnik",
+  "TOEB": "Öffentliches Bauen",
+  "TÖB": "Öffentliches Bauen",
+
+  "WIN": "BWL - Industrie",
+  "WWI": "Wirtschaftsinformatik",
+  "WHD": "BWL - Handel",
+  "WBK": "BWL - Bank",
+  "WBSTUF": "Betriebswirtschaftliche Steuerlehre, Unternehmensrechnung und Finanzen",
+  "WGW": "BWL - Gesundheitsmanagement",
+  "WGM": "BWL - Gesundheitsmanagement",
+  "WON": "Onlinemedien",
+  "WIB": "BWL - International Business",
+  "WDBM": "BWL - Digital Business Management",
+  "WHI": "BWL - Handel - Internationaler Handel",
+  //"WIPB": "??"
+}
+
+export interface CourseGroup {
+  name: string,
+  type: "W" | "T"
+  keys: string[]
+}
+
+export interface CourseTypeGrouped {
+  wirtschaft: CourseGroup[],
+  technik: CourseGroup[]
+}
+
+export const nameGroupCourses = (courses: string[]) : CourseTypeGrouped => {
+  let grouped : CourseGroup[] = [];
+  const used = new Set<string>();
+
+  for (let courseGroup in nameMap) {
+    // @ts-ignore
+    grouped.push({name: nameMap[courseGroup], keys: courses.filter(c => {
+      const name = c.split("-")[1];
+      if (name) {
+        const include = name.startsWith(courseGroup);
+        if (include) used.add(c);
+        return include;
+      }
+      return false;
+    }), type: courseGroup.startsWith("T") ? "T" : "W"})
+  }
+
+  grouped.sort((a, b) => {
+    const nameA = a.name.toUpperCase();
+    const nameB = b.name.toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    // Namen müssen gleich sein
+    return 0;
+  });
+
+  const unused = courses.filter(c => !used.has(c));
+
+  grouped.push({name: "Sonstiege", keys: unused.filter(c => c.startsWith("MOS-T") || c.startsWith("MGH-T")), type: "T"});
+  grouped.push({name: "Sonstiege", keys: unused.filter(c => c.startsWith("MOS-W") || c.startsWith("MGH-W") || (!c.startsWith("MOS-T") && !c.startsWith("MGH-T"))), type: "W"});
+
+  grouped = grouped.filter(g => g.keys.length > 0);
+
+  return {
+    wirtschaft: grouped.filter(g => g.type === "W"),
+    technik: grouped.filter(g => g.type === "T")
+  };
 }

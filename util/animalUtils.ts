@@ -29,11 +29,12 @@ export const animalNames = {
     'panda': "Panda",     'parrot': "Papagei",    'penguin': "Pinguin",    'puma': "Puma",
     'rabbit': "Hase",    'raccoon': "Waschbär",   'rhinoceros': "Nashorn", 'sloth': "Faultier",
     'snake': "Schlange",     'tiger': "Tiger",     'turtle': "Schildkröte",     'walrus': "Walross",
-    'wolf': "Wolf",      'zebra': "Zebra"
+    'wolf': "Wolf",      'zebra': "Zebra", "dragon" : "Drache"
   }
 }
 
 export const getRandomAnimal = () => {
+  if (Math.random() > 0.99) return "dragon";
   return animalNames.animals[Math.floor(Math.random()*animalNames.animals.length)];
 }
 
