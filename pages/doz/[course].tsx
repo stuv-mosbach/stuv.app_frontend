@@ -182,31 +182,6 @@ const CoursePage: NextPage = () => {
     }
   }
 
-  const getLectureColor = (lecture : lectureType) => {
-    if (lecture.name.toLowerCase().includes("klausur") || lecture.name.toLowerCase().includes("prüfung")) {
-      return "bg-red-800";
-    } else if (lecture.type === "ONLINE" || lecture.type === "HYBRID") {
-      return "bg-sky-800";
-    } else if (lecture.rooms.length === 0 && (lecture.lecturer === undefined || lecture.lecturer.length === 0)) {
-      return "bg-green-900";
-    }
-
-    return "bg-gray-700";
-  }
-
-  const getLectureType = (lecture : lectureType) : keyof filterType => {
-    if (lecture.name.toLowerCase().includes("klausur") || lecture.name.toLowerCase().includes("prüfung")) {
-      return "test";
-    } else if (lecture.type === "ONLINE" || lecture.type === "HYBRID") {
-      return "online";
-    } else if (lecture.rooms.length === 0 && (lecture.lecturer === undefined || lecture.lecturer.length === 0)) {
-      return "free";
-    }
-
-    return "normal";
-  }
-
-
   const MenuItem = (props: { checked: boolean, content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
     <div onClick={() => {if (props.onClick) props.onClick();}}
         //dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform cursor-pointer

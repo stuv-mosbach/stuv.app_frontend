@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useRouter} from "next/router";
 import {DetailedUpdateInfo, getUpdateInfo, Lecture, UpdatedLecture} from "../../util/syncUtils";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import {
   ViewGridIcon,
   ViewListIcon
 } from "@heroicons/react/outline";
-import {getRandomAnimal} from "../../util/animalUtils";
+import {getRandomAnimal, translateAnimalName} from "../../util/animalUtils";
 
 const UpdateInfoPage = () => {
 
@@ -25,8 +25,6 @@ const UpdateInfoPage = () => {
   const [loading, setLoading] = useState(true);
   const [updateId, setUpdateId] = useState("X");
   const [updateInfo, setUpdateInfo] = useState<DetailedUpdateInfo>();
-
-  const [randomAnimal, setRandomAnimal] = useState(getRandomAnimal());
 
   useEffect(() => {
     if (router.isReady) {
@@ -280,8 +278,9 @@ const UpdateInfoPage = () => {
     )
   }
 
+  const [randomAnimal, setRandomAnimal] = useState(getRandomAnimal());
   const hasChanges = updateInfo && (updateInfo.newLectures.length > 0 || updateInfo.updatedLectures.length > 0 || updateInfo.removedLectures.length > 0);
-  const animalName = randomAnimal ? randomAnimal.split("-").join(" ") : "";
+  const animalName = useMemo(() => randomAnimal ? translateAnimalName(randomAnimal) : "", [randomAnimal]);
 
   return (
     <Layout title={`Update ${updateId}`}>
@@ -374,7 +373,7 @@ const UpdateInfoPage = () => {
               <div className="flex flex-col items-center justify-center">
                   <img className={"w-3/5"} alt={`Hier sollte ein Bild von '${animalName} sein.'`} src={`/animals/${randomAnimal}.svg`} />
               </div>
-              <span className={"text-gray-400 text-xl"}>Es gibt hier keine Veränderungen, aber hier ist ein {animalName}</span>
+              <span className={"text-gray-400 text-xl"}>Es gibt hier keine Veränderungen, aber hier ist ein {animalName}.</span>
           </div>
         </div>
         }

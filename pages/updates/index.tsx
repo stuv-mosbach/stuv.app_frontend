@@ -15,7 +15,7 @@ export const UpdatePage = () => {
 
   moment.locale("de");
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [updateInfos, setUpdateInfos] = useState<UpdateInfo[]>([]);
   const [visibleUpdateInfos, setVisibleUpdateInfos] = useState<UpdateInfo[]>([]);
@@ -24,6 +24,7 @@ export const UpdatePage = () => {
 
   useEffect(() => {
     getUpdateInfos().then(res => {
+      setLoading(false);
       if (res) setUpdateInfos(res);
     })
   }, []);

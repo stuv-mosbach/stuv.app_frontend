@@ -1,6 +1,6 @@
 import type {NextPage} from 'next'
 import {useRouter} from "next/router";
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {FilterIcon, ShareIcon, ViewGridIcon, ViewListIcon} from "@heroicons/react/outline";
 import moment from "moment";
@@ -14,6 +14,7 @@ import {filterType, formatCourseName, getLectureType, groupLectures, lectureType
 import {LectureSection} from "../components/LectureSection";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {getNextNElements} from "../util/arrayUtils";
+import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 
 const CoursePage: NextPage = () => {
 
@@ -27,6 +28,10 @@ const CoursePage: NextPage = () => {
   const [visibleLectures, setVisibleLectures] = useState<lectureType[][]>([]);
   const [loading, setLoading] = useState(true);
   const [allExpanded, setAllExpanded] = useState(false);
+  const [noLecturesFound, setNoLecturesFound] = useState(false);
+
+  const [randomAnimal, setRandomAnimal] = useState(getRandomAnimal());
+  const animalName = useMemo(() => randomAnimal ? translateAnimalName(randomAnimal) : "", [randomAnimal]);
 
   const [activeLecture, setActiveLecture] = useState<lectureType | undefined>();
   const [percentage, setPercentage] = useState<string>();
@@ -139,6 +144,7 @@ const CoursePage: NextPage = () => {
         setOriginalLectures(groupedLectures);
         updateActiveLecture(groupedLectures);
         setLoading(false);
+        setNoLecturesFound(res.data.length === 0);
       }).catch(err => {
         console.log(err);
         router.push("/");
@@ -273,7 +279,7 @@ const CoursePage: NextPage = () => {
 
           <div className="container mx-auto">
 
-            <div className={"flex flex-col pb-7 items-center"}>
+            {!noLecturesFound && <div className={"flex flex-col pb-7 items-center"}>
 
               {/*{filteredLectures.map(g => {
                 const l0 = g[0];
@@ -287,11 +293,13 @@ const CoursePage: NextPage = () => {
                 dataLength={visibleLectures.length}
                 next={nextScrollLectures}
                 hasMore={hasMoreToScroll()}
-                loader={<div className={"flex w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
+                loader={<div
+                  className={"flex w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-blue-300 rounded-xl bg-opacity-30 shadow-2xl"}>
                   <span className={"w-full text-center text-gray-200"}>Lade weitere Vorlesungen</span>
                 </div>}
                 endMessage={
-                  <div className={"w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl flex"}>
+                  <div
+                    className={"w-11/12 sm:w-5/6 md:w-3/4 lg:w-3/6 mx-auto py-3 mt-3 bg-red-300 rounded-xl bg-opacity-30 shadow-2xl flex"}>
                     <span className={"w-full text-center text-gray-200"}>Keine weiteren Vorlesungen Verfügbar</span>
                   </div>
                 }
@@ -300,11 +308,24 @@ const CoursePage: NextPage = () => {
                 {visibleLectures.map(g => {
                   const l0 = g[0];
                   const key = `${l0.date}-${l0.startTime}`;
-                  return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture} allExpanded={allExpanded} percentage={percentage} />;
+                  return <LectureSection key={key ?? "upsi"} lectures={g} activeLecture={activeLecture}
+                                         allExpanded={allExpanded} percentage={percentage}/>;
                 })}
               </InfiniteScroll>
 
-            </div>
+            </div>}
+
+            {noLecturesFound &&
+              <div style={{height: "calc(100vh - 52px - 60px)"}} className="flex flex-col items-center justify-center">
+                  <div className="select-none">
+                      <div className="flex flex-col items-center justify-center">
+                          <img className={"w-4/5"} alt={`Hier sollte ein Bild von '${animalName} sein.'`} src={`/animals/${randomAnimal}.svg`} />
+                      </div>
+                      <div className={"text-gray-400 text-xl text-center"}>Wir konnten keine Vorlesungen finden, <br /> aber hier ist ein {animalName}.</div>
+                  </div>
+              </div>
+            }
+
           </div>
 
         </div>
