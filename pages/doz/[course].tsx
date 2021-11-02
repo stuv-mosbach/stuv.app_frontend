@@ -237,7 +237,7 @@ const CoursePage: NextPage = () => {
           </div>
 
           <Link href={"/"}>
-            <div className={"flex ml-2 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200"}>
+            <div className={"flex ml-2 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200"}>
               <ArrowLeftIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden lg:block"}>Back</span>
             </div>
@@ -245,7 +245,7 @@ const CoursePage: NextPage = () => {
 
           <div className={"flex flex-grow justify-end"}>
 
-            <div onClick={openFilter} className="flex px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+            <div onClick={openFilter} className="flex px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden lg:block"}>Filter</span>
 
@@ -279,13 +279,13 @@ const CoursePage: NextPage = () => {
 
             </div>
 
-            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               <span className={"text-xl text-gray-200 hidden lg:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
             </div>
 
-            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-gray-700 hover:bg-opacity-70 select-none transition transform duration-200" >
+            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden lg:block"}>Share</span>
             </div>

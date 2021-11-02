@@ -30,10 +30,12 @@ export const groupLectures = (lectures : lectureType[]) => {
 }
 
 export const getLectureColor = (lecture : lectureType) => {
-  if (lecture.name.toLowerCase().includes("klausur") || lecture.name.toLowerCase().includes("prüfung")) {
+  if (lecture.name && (lecture.name.toLowerCase().includes("klausur") || lecture.name.toLowerCase().includes("prüfung"))) {
     return "bg-red-800";
   } else if (lecture.type === "ONLINE" || lecture.type === "HYBRID") {
     return "bg-sky-800";
+  } else if (lecture.name && (lecture.name.toLowerCase().includes("selbststudium") || lecture.name.toLowerCase().includes("study day"))) {
+    return "bg-gray-900";
   } else if (lecture.rooms.length === 0 && (lecture.lecturer === undefined || lecture.lecturer.length === 0)) {
     return "bg-green-900";
   }

@@ -19,12 +19,14 @@ export const LectureSection = (props: IProps) => {
         <div className="">
 
           <div className={"mt-3"}>
-            {props.lectures.map(l => <LectureCard key={l.id}
-                                                  lecture={l}
-                                                  activeLecture={props.activeLecture}
-                                                  percentage={props.percentage}
-                                                  allExpanded={props.allExpanded}
-            />)}
+            {props.lectures.map(l =>
+              <LectureCard key={l.id}
+                lecture={l}
+                activeLecture={props.activeLecture}
+                percentage={props.percentage}
+                allExpanded={props.allExpanded}
+              />
+            )}
           </div>
 
         </div>
