@@ -66,14 +66,15 @@ const CoursePage: NextPage = () => {
       const filter = getFilteredTypes();
       if (filter.length === 0) {
         setFilteredLectures(lectures);
-        setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
+        setVisibleLectures(lectures);
         return;
       }
       const filtered = lectures.map(subl => subl.filter(l => {
         return filter.indexOf(getLectureType(l)) !== -1;
       })).filter(l => l.length > 0);
       setFilteredLectures(filtered);
-      setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
+      setVisibleLectures(filtered);
+      //setVisibleLectures(getNextNElements(5, lectures, [...visibleLectures]));
     }
   }
 
@@ -84,6 +85,7 @@ const CoursePage: NextPage = () => {
   const hasMoreToScroll = () => filteredLectures.length > visibleLectures.length;
 
   useEffect(() => {
+    console.log("Updating Filtered Lectures:")
     updateFilter();
   }, [filter, originalLectures]);
 
