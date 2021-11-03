@@ -72,7 +72,8 @@ const Home: NextPage = () => {
     return (
       <Link href={`/${props.name}`}>
         <div
-          className={classNames("bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-opacity-20 hover:bg-blueGray-500 select-none", courseList[props.name] && "border border-sky-300")}>
+          className={classNames("bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-opacity-20 hover:bg-blueGray-500 select-none",
+            courseList[props.name] && "border border-sky-300", "transform transition ease-in-out duration-200")}>
           <span className="text-md text-gray-200">{nameParts.join("-")}</span>
         </div>
       </Link>
