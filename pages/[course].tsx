@@ -86,7 +86,6 @@ const CoursePage: NextPage = () => {
   const hasMoreToScroll = () => filteredLectures.length > visibleLectures.length;
 
   useEffect(() => {
-    console.log("Updating Filtered Lectures:")
     updateFilter();
   }, [filter, originalLectures]);
 
