@@ -15,6 +15,7 @@ import {LectureSection} from "../components/LectureSection";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {getNextNElements} from "../util/arrayUtils";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
+import {HoverAnimation} from "../components/HoverAnimation";
 
 const CoursePage: NextPage = () => {
 
@@ -205,7 +206,7 @@ const CoursePage: NextPage = () => {
           <div className="absolute z-50 left-1/2 transform -translate-x-1/2 -translate-y-2">
             <div className="flex flex-grow justify-center">
               <div className="{/*bg-gradient-to-b to-teal-600 from-indigo-600*/} bg-opacity-30 bg-gray-900    pt-2 pb-3 px-8 rounded-xl">
-                <span className={"text-gray-200 text-2xl font-semibold select-none"}>{formatCourseName(course ?? "")}</span>
+                <HoverAnimation><span className={"text-gray-200 text-2xl font-semibold select-none"}>{formatCourseName(course ?? "")}</span></HoverAnimation>
               </div>
             </div>
           </div>
