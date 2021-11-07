@@ -5,9 +5,10 @@ import Layout from "../components/Layout";
 import axios from "axios";
 import {useRouter} from "next/router";
 import classNames from "classnames";
-import {CourseGroup, nameGroupCourses} from "../util/lectureUtils";
+import {CourseGroup, CourseTypeGrouped, nameGroupCourses} from "../util/lectureUtils";
 import {SearchIcon} from "@heroicons/react/outline";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
+import {ChevronDown} from "tabler-icons-react";
 
 const Home: NextPage = () => {
 
@@ -22,6 +23,10 @@ const Home: NextPage = () => {
 
   const [randomAnimal, setRandomAnimal] = useState(getRandomAnimal());
   const animalName = useMemo(() => randomAnimal ? translateAnimalName(randomAnimal) : "", [randomAnimal]);
+
+  const rand = Math.random();
+  const [mosName] = useState(rand > 0.99 ? "Nixlosbach" : "Mosbach");
+  const [mghName] = useState(rand > 0.99 ? "Bad Mädelsheim" : "Bad Mergentheim");
 
   const mosMap = useMemo(() => courses ? nameGroupCourses(courses.filter(c => c.startsWith("MOS"))) : {
     wirtschaft: [],
@@ -70,167 +75,174 @@ const Home: NextPage = () => {
     nameParts.shift();
 
     return (
-      <Link href={`/${props.name}`}>
-        <div
-          className={classNames("bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-opacity-20 hover:bg-blueGray-500 select-none",
-            courseList[props.name] && "border border-sky-300", "transform transition ease-in-out duration-200")}>
-          <span className="text-md text-gray-200">{nameParts.join("-")}</span>
-        </div>
-      </Link>
+        <Link href={`/${props.name}`}>
+          <div
+              className={classNames("bg-gray-700 bg-opacity-85 rounded-xl p-2 cursor-pointer hover:bg-opacity-20 hover:bg-blueGray-500 select-none",
+                  courseList[props.name] && "border border-sky-300", "transform transition ease-in-out duration-200")}>
+            <span className="text-md text-gray-200">{nameParts.join("-")}</span>
+          </div>
+        </Link>
     )
   }
 
   const CourseSection = (props: { group: CourseGroup }) => {
 
     return (
-      <div className={"divide-gray-500 w-full divide-y"}>
-        <div className={"text-gray-200 text-xl font-light truncate"}>{props.group.name}</div>
-        <div>
-          <div className="border-l-4 border-blueGray-200 mt-2">
-            <div className={"mt-3"}>
-              <div
-                className={"px-2 gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
-                {props.group.keys.map(course => <CourseCard key={course} name={course}/>)}
+        <div className={"divide-gray-500 w-full divide-y"}>
+          <div className={"text-gray-200 text-xl font-light truncate"}>{props.group.name}</div>
+          <div>
+            <div className="border-l-4 border-blueGray-200 mt-2">
+              <div className={"mt-3"}>
+                <div
+                    className={"px-2 gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
+                  {props.group.keys.map(course => <CourseCard key={course} name={course}/>)}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
     )
   }
 
   const mosQuery = useMemo(() => filteredList.filter(c => c.startsWith("MOS")), [filteredList]);
   const mghQuery = useMemo(() => filteredList.filter(c => c.startsWith("MGH")), [filteredList]);
 
+  const CourseExpandable = (props: { name: string, courses: CourseTypeGrouped }) => {
+
+    const [expanded, setExpanded] = useState(true);
+    const [tExpanded, setTExpanded] = useState(true);
+    const [wExpanded, setWExpanded] = useState(true);
+
+    return (
+        <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
+          <div className="flex group cursor-pointer" onClick={() => setExpanded(!expanded)}>
+            <span className={"text-gray-200 text-4xl font-light"}>{props.name}</span>
+            <div className="flex flex-grow justify-end">
+              <div className={"rounded-xl group-hover:bg-gray-200 group-hover:bg-opacity-20"}>
+                <ChevronDown
+                    className={classNames(expanded && "rotate-180", "transform select-none duration-500 ease-in-out", "h-10 w-10 text-gray-200")}/>
+              </div>
+            </div>
+          </div>
+          <div
+              className={classNames(expanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+            <div className="border-l-4 border-blueGray-600 mt-2">
+              <div>
+                <div className={"ml-2 pr-2 divide-y divide-gray-300"}>
+                  <div className="flex group cursor-pointer" onClick={() => setTExpanded(!tExpanded)}>
+                    <span className={"text-gray-200 text-3xl font-light"}>Technik</span>
+                    <div className="flex flex-grow justify-end">
+                      <div className={"rounded-xl group-hover:bg-gray-200 group-hover:bg-opacity-20"}>
+                        <ChevronDown
+                            className={classNames(tExpanded && "rotate-180", "transform select-none duration-500 ease-in-out", "h-10 w-10 text-gray-200")}/>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={classNames(tExpanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+                    <div className="border-l-4 border-blueGray-400 mt-2">
+                      <div className={"gap-2 grid grid-cols-1 px-2"}>
+                        {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
+                        {props.courses.technik.map((g, i) => <CourseSection key={i} group={g}/>)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={"ml-2 pr-2 divide-y divide-gray-300 mt-5"}>
+                  <div className="flex group cursor-pointer" onClick={() => setWExpanded(!wExpanded)}>
+                    <span className={"text-gray-200 text-3xl font-light"}>Wirtschaft</span>
+                    <div className="flex flex-grow justify-end">
+                      <div className={"rounded-xl group-hover:bg-gray-200 group-hover:bg-opacity-20"}>
+                        <ChevronDown
+                            className={classNames(wExpanded && "rotate-180", "transform select-none duration-500 ease-in-out", "h-10 w-10 text-gray-200")}/>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                      className={classNames(wExpanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+                    <div className="border-l-4 border-blueGray-400 mt-2">
+                      <div className={"gap-2 grid grid-cols-1 px-2"}>
+                        {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
+                        {props.courses.wirtschaft.map((g, i) => <CourseSection key={i} group={g}/>)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    )
+
+  }
+
   return (
-    <Layout>
+      <Layout>
 
-      <div className={"flex flex-grow justify-center items-center h-screen overflow-y-scroll"}>
-        {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"/>}
+        <div className={"flex flex-grow justify-center items-center h-screen overflow-y-scroll"}>
+          {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"/>}
 
-        {!loading &&
-        <div className="flex flex-col flex-grow items-center" style={{height: "100%"}}>
+          {!loading &&
+          <div className="flex flex-col flex-grow items-center" style={{height: "100%"}}>
 
             <div className="w-full md:w-3/4 w-2/4 px-2 md:px-0">
-                <div className="relative flex w-full flex-wrap items-stretch my-3">
-                    <input
-                        type="text"
-                        placeholder="Suche"
-                        className="px-3 py-3 placeholder-blueGray-300 text-blueGray-200 relative bg-gray-700 bg-opacity-50 rounded text-base border-0 shadow outline-none focus:outline-none focus:ring w-full pr-10"
-                        value={searchString}
-                        onChange={e => setSearchString(e.target.value)}
-                    />
-                    <span
-                        className={classNames("", "z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-lg items-center justify-center w-8 right-0 pr-3 py-3")}>
+              <div className="relative flex w-full flex-wrap items-stretch my-3">
+                <input
+                  type="text"
+                  placeholder="Suche"
+                  className="px-3 py-3 placeholder-blueGray-300 text-blueGray-200 relative bg-gray-700 bg-opacity-50 rounded text-base border-0 shadow outline-none focus:outline-none focus:ring w-full pr-10"
+                  value={searchString}
+                  onChange={e => setSearchString(e.target.value)}
+                />
+                <span
+                  className={classNames("", "z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-lg items-center justify-center w-8 right-0 pr-3 py-3")}>
                       <SearchIcon/>
                     </span>
-                </div>
-            </div>
-
-          {(hasQuery && mosQuery.length > 0) &&
-            <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
-              <span className={"text-gray-200 text-4xl font-light pb-3"}>Mosbach</span>
-              <div className="pt-2">
-                  <div className={"gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
-                    {mosQuery.map(c => <CourseCard key={c} name={c} />)}
-                  </div>
               </div>
             </div>
-          }
 
-          {(hasQuery && mghQuery.length > 0) &&
-          <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
-              <span className={"text-gray-200 text-4xl font-light pb-3"}>Bad Mergentheim</span>
+            {(hasQuery && mosQuery.length > 0) &&
+            <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
+              <span className={"text-gray-200 text-4xl font-light pb-3"}>{mosName}</span>
               <div className="pt-2">
                 <div className={"gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
-                  {mghQuery.map(c => <CourseCard key={c} name={c} />)}
-                </div>
-              </div>
-          </div>
-          }
-
-          {!hasQuery &&
-          <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
-            <span className={"text-gray-200 text-4xl font-light"}>Mosbach</span>
-            <div>
-              <div className="border-l-4 border-blueGray-600 mt-2">
-                <div>
-                  <div className={"ml-2 pr-2 divide-y divide-gray-300"}>
-                    <span className={"text-gray-200 text-3xl font-light"}>Technik</span>
-                    <div>
-                      <div className="border-l-4 border-blueGray-400 mt-2">
-                        <div className={"gap-2 grid grid-cols-1 px-2"}>
-                          {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
-                          {mosMap.technik.map((g, i) => <CourseSection key={i} group={g}/>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={"ml-2 pr-2 divide-y divide-gray-300 mt-5"}>
-                    <span className={"text-gray-200 text-3xl font-light"}>Wirtschaft</span>
-                    <div>
-                      <div className="border-l-4 border-blueGray-400 mt-2">
-                        <div className={"gap-2 grid grid-cols-1 px-2"}>
-                          {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
-                          {mosMap.wirtschaft.map((g, i) => <CourseSection key={i} group={g}/>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {mosQuery.map(c => <CourseCard key={c} name={c}/>)}
                 </div>
               </div>
             </div>
-          </div>
-          }
+            }
 
-          {(hasQuery && filteredList.length === 0) &&
-          <div className="flex flex-col items-center justify-center h-full">
+            {(hasQuery && mghQuery.length > 0) &&
+            <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
+              <span className={"text-gray-200 text-4xl font-light pb-3"}>{mghName}</span>
+              <div className="pt-2">
+                <div className={"gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}>
+                  {mghQuery.map(c => <CourseCard key={c} name={c}/>)}
+                </div>
+              </div>
+            </div>
+            }
+
+            {!hasQuery && <CourseExpandable name={mosName} courses={mosMap}/>}
+            {!hasQuery && <CourseExpandable name={mghName} courses={mghMap}/>}
+
+            {(hasQuery && filteredList.length === 0) &&
+            <div className="flex flex-col items-center justify-center h-full">
               <div className="select-none">
-                  <div className="flex flex-col items-center justify-center">
-                      <img className={"w-4/5"} alt={`Hier sollte ein Bild von '${animalName} sein.'`} src={`/animals/${randomAnimal}.svg`} />
-                  </div>
-                  <div className={"text-gray-400 text-xl text-center"}>Wir konnten keinen Kurs finden, <br /> aber hier ist ein {animalName}.</div>
-              </div>
-          </div>
-          }
-
-          {!hasQuery &&
-          <div className={"mt-3 divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 pb-3"}>
-            <span className={"text-gray-200 text-4xl font-light"}>Bad Mergentheim</span>
-            <div>
-              <div className="border-l-4 border-blueGray-600 mt-2">
-                <div>
-                  <div className={"ml-2 pr-2 divide-y divide-gray-300"}>
-                    <span className={"text-gray-200 text-3xl font-light"}>Technik</span>
-                    <div>
-                      <div className="border-l-4 border-blueGray-400 mt-2">
-                        <div className={"gap-2 grid grid-cols-1 px-2"}>
-                          {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
-                          {mghMap.technik.map((g, i) => <CourseSection key={i} group={g}/>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={"ml-2 pr-2 divide-y divide-gray-300 mt-5"}>
-                    <span className={"text-gray-200 text-3xl font-light"}>Wirtschaft</span>
-                    <div>
-                      <div className="border-l-4 border-blueGray-400 mt-2">
-                        <div className={"gap-2 grid grid-cols-1 px-2"}>
-                          {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
-                          {mghMap.wirtschaft.map((g, i) => <CourseSection key={i} group={g}/>)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex flex-col items-center justify-center">
+                  <img className={"w-4/5"} alt={`Hier sollte ein Bild von '${animalName} sein.'`}
+                       src={`/animals/${randomAnimal}.svg`}/>
+                </div>
+                <div className={"text-gray-400 text-xl text-center"}>Wir konnten keinen Kurs finden, <br/> aber hier ist
+                  ein {animalName}.
                 </div>
               </div>
             </div>
-          </div>}
+            }
+          </div>
+          }
         </div>
-        }
-      </div>
 
-    </Layout>
+      </Layout>
   )
 }
 
