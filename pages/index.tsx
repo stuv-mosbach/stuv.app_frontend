@@ -107,14 +107,14 @@ const Home: NextPage = () => {
   const mosQuery = useMemo(() => filteredList.filter(c => c.startsWith("MOS")), [filteredList]);
   const mghQuery = useMemo(() => filteredList.filter(c => c.startsWith("MGH")), [filteredList]);
 
-  const CourseExpandable = (props: { name: string, courses: CourseTypeGrouped }) => {
+  const CourseExpandable = (props: { className?: string, name: string, courses: CourseTypeGrouped }) => {
 
     const [expanded, setExpanded] = useState(true);
     const [tExpanded, setTExpanded] = useState(true);
     const [wExpanded, setWExpanded] = useState(true);
 
     return (
-        <div className={"divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3"}>
+        <div className={classNames(props.className, "divide-gray-300 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 mt-3")}>
           <div className="flex group cursor-pointer" onClick={() => setExpanded(!expanded)}>
             <span className={"text-gray-200 text-4xl font-light"}>{props.name}</span>
             <div className="flex flex-grow justify-end">
@@ -125,7 +125,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div
-              className={classNames(expanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+              className={classNames(expanded && "max-h-full", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
             <div className="border-l-4 border-blueGray-600 mt-2">
               <div>
                 <div className={"ml-2 pr-2 divide-y divide-gray-300"}>
@@ -138,7 +138,7 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={classNames(tExpanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+                  <div className={classNames(tExpanded && "max-h-full", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
                     <div className="border-l-4 border-blueGray-400 mt-2">
                       <div className={"gap-2 grid grid-cols-1 px-2"}>
                         {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
@@ -158,7 +158,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                   <div
-                      className={classNames(wExpanded && "max-h-screen", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
+                      className={classNames(wExpanded && "max-h-full", "transform max-h-0 overflow-hidden duration-500 ease-in-out")}>
                     <div className="border-l-4 border-blueGray-400 mt-2">
                       <div className={"gap-2 grid grid-cols-1 px-2"}>
                         {/*courses.filter(c => c.startsWith("MOS")).map(course => <CourseCard key={course} name={course}/>)*/}
@@ -223,7 +223,7 @@ const Home: NextPage = () => {
             }
 
             {!hasQuery && <CourseExpandable name={mosName} courses={mosMap}/>}
-            {!hasQuery && <CourseExpandable name={mghName} courses={mghMap}/>}
+            {!hasQuery && <CourseExpandable name={mghName} courses={mghMap} className={"pb-10"}/>}
 
             {(hasQuery && filteredList.length === 0) &&
             <div className="flex flex-col items-center justify-center h-full">
