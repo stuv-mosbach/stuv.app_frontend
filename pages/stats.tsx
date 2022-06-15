@@ -26,8 +26,8 @@ export const StatsPage = () => {
 
   const notLoading = () => (
     <>
-      <div className={"mt-3 divide-gray-500 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 pb-3"}>
-        <span className={"text-gray-200 text-4xl font-light"}>Kursaufrufe Total</span>
+      <div className={"mt-3 divide-zinc-500 w-full divide-y md:w-3/4 w-2/4 px-2 md:px-0 pb-3"}>
+        <span className={"text-zinc-200 text-4xl font-light"}>Kursaufrufe Total</span>
         <div className="flex flex-grow justify-center">
 
           <div className={"mt-3"} style={{height: "90vh", width: "90vw"}}>
@@ -58,7 +58,7 @@ export const StatsPage = () => {
   return (
     <Layout title={"Stats"}>
       <div className={"flex flex-grow justify-center h-screen overflow-y-scroll"}>
-        {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"/>}
+        {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-zinc-200 h-64 w-64"/>}
         {!loading && notLoading()}
       </div>
     </Layout>

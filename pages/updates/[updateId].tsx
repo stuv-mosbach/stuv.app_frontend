@@ -46,14 +46,14 @@ const UpdateInfoPage = () => {
     return (
       <>
         <div className={"md:hidden"}/>
-        <div className={"text-xl text-gray-500 flex flex-row"}>
+        <div className={"text-xl text-zinc-500 flex flex-row"}>
           {props.left}
-          <div className={"ml-1 md:block hidden text-gray-100"}>
+          <div className={"ml-1 md:block hidden text-zinc-100"}>
             {props.right}
           </div>
         </div>
         <div className={"md:hidden"}/>
-        <div className={"text-xl md:hidden text-gray-100"}>{props.right}</div>
+        <div className={"text-xl md:hidden text-zinc-100"}>{props.right}</div>
         <div className={"md:hidden"}/>
       </>
     )
@@ -66,23 +66,23 @@ const UpdateInfoPage = () => {
         "transform transition ease-in-out duration-200"
       )}>
 
-        <div className={"divide-y divide-gray-500"}>
+        <div className={"divide-y divide-zinc-500"}>
           <div className="flex flex-grow">
-            <span className={"text-xl text-gray-300 select-none truncate"}>{props.lecture.name}</span>
+            <span className={"text-xl text-zinc-300 select-none truncate"}>{props.lecture.name}</span>
           </div>
           <div className={classNames("pt-2 grid gap-2 grid-cols-1 select-none")}>
 
             {props.lecture.lecturer?.length > 0 &&
             <div className="flex gap-2 inline-block align-middle">
-                <UserGroupIcon className={"text-gray-300 h-5 w-5 flex-none align-bottom bg-"}/>
-                <span className={"flex-grow text-gray-300 truncate"}>{props.lecture.course}</span>
+                <UserGroupIcon className={"text-zinc-300 h-5 w-5 flex-none align-bottom bg-"}/>
+                <span className={"flex-grow text-zinc-300 truncate"}>{props.lecture.course}</span>
             </div>
             }
 
             <div className="flex gap-2">
-              <CalendarIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
-              <span className={"flex-grow text-gray-300 truncate"}>{moment(props.lecture.date).format("DD.MM.YYYY")}
-                <span className={"text-gray-400"}>
+              <CalendarIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
+              <span className={"flex-grow text-zinc-300 truncate"}>{moment(props.lecture.date).format("DD.MM.YYYY")}
+                <span className={"text-zinc-400"}>
                   {""} {moment(props.lecture.startTime).format("kk.mm")} - {moment(props.lecture.endTime).format("kk.mm")}
                 </span>
               </span>
@@ -90,16 +90,16 @@ const UpdateInfoPage = () => {
 
             {props.lecture.lecturer?.length > 0 &&
             <div className="flex gap-2 inline-block align-middle">
-                <UserIcon className={"text-gray-300 h-5 w-5 flex-none align-bottom bg-"}/>
-                <span className={"flex-grow text-gray-300 truncate"}>{props.lecture.lecturer}</span>
+                <UserIcon className={"text-zinc-300 h-5 w-5 flex-none align-bottom bg-"}/>
+                <span className={"flex-grow text-zinc-300 truncate"}>{props.lecture.lecturer}</span>
             </div>
             }
 
             {props.lecture.rooms.length > 0 &&
               props.lecture.rooms.map(r => (
                 <div className="flex gap-2 inline-block align-middle" key={r}>
-                  <HomeIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
-                  <span className={"flex-grow text-gray-300 truncate"}>{r}</span>
+                  <HomeIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
+                  <span className={"flex-grow text-zinc-300 truncate"}>{r}</span>
                 </div>
               ))
             }
@@ -135,9 +135,9 @@ const UpdateInfoPage = () => {
           <>
             {
               <div className="flex gap-2">
-                <CalendarIcon className={classNames("text-gray-300 h-5 w-5 flex-none","text-red-300")}/>
-                <span className={"flex-grow text-gray-300 truncate"}>{moment(props.lecture.lecture.date).format("DD.MM.YYYY")}
-                  <span className={"text-gray-400"}>
+                <CalendarIcon className={classNames("text-zinc-300 h-5 w-5 flex-none","text-red-300")}/>
+                <span className={"flex-grow text-zinc-300 truncate"}>{moment(props.lecture.lecture.date).format("DD.MM.YYYY")}
+                  <span className={"text-zinc-400"}>
                   {""} {moment(props.lecture.lecture.startTime).format("kk.mm")} - {moment(props.lecture.lecture.endTime).format("kk.mm")}
                 </span>
               </span>
@@ -145,9 +145,9 @@ const UpdateInfoPage = () => {
             }
             {
               <div className="flex gap-2">
-                <CalendarIcon className={classNames("text-gray-300 h-5 w-5 flex-none", "text-green-300")}/>
-                <span className={"flex-grow text-gray-300 truncate"}>{moment(startTime).format("DD.MM.YYYY")}
-                  <span className={"text-gray-400"}>
+                <CalendarIcon className={classNames("text-zinc-300 h-5 w-5 flex-none", "text-green-300")}/>
+                <span className={"flex-grow text-zinc-300 truncate"}>{moment(startTime).format("DD.MM.YYYY")}
+                  <span className={"text-zinc-400"}>
                   {""} {moment(startTime).format("kk.mm")} - {moment(endTime).format("kk.mm")}
                 </span>
               </span>
@@ -160,7 +160,7 @@ const UpdateInfoPage = () => {
 
       return (
         <div className="flex gap-2">
-          <CalendarIcon className={classNames("text-gray-300 h-5 w-5 flex-none")}/>
+          <CalendarIcon className={classNames("text-zinc-300 h-5 w-5 flex-none")}/>
           <span className={"flex-grow text-gray-300 truncate"}>{moment(props.lecture.lecture.date).format("DD.MM.YYYY")}
             <span className={"text-gray-400"}>
                   {""} {moment(props.lecture.lecture.startTime).format("kk.mm")} - {moment(props.lecture.lecture.endTime).format("kk.mm")}
@@ -315,7 +315,7 @@ const UpdateInfoPage = () => {
 
       {(!loading && updateInfo) &&
       <div
-          className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900"
+          className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-slate-900"
           style={{height: "calc(100vh - 52px)"}}
       >
 

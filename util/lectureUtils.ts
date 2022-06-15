@@ -37,12 +37,12 @@ export const getLectureColor = (lecture : lectureType) => {
   } else if (lecture.type === "ONLINE" || lecture.type === "HYBRID") {
     return "bg-sky-800";
   } else if (lecture.name && (lecture.name.toLowerCase().includes("selbststudium") || lecture.name.toLowerCase().includes("study day"))) {
-    return "bg-gray-900";
+    return "bg-zinc-900";
   } else if (lecture.rooms.length === 0 && (lecture.lecturer === undefined || lecture.lecturer.length === 0)) {
     return "bg-green-900";
   }
 
-  return "bg-gray-900";
+  return "bg-zinc-900";
 }
 
 export const getLectureType = (lecture : lectureType) : keyof filterType => {
