@@ -35,12 +35,12 @@ export const LectureCard = (props: IProps) => {
            onClick={expand}
       >
 
-        <div className={"divide-y divide-gray-500"}>
+        <div className={"divide-y divide-zinc-500"}>
           <div className="flex flex-grow">
-            <span className={"text-xl text-gray-300 select-none"}>{lecture.name}</span>
+            <span className={"text-xl text-zinc-300 select-none"}>{lecture.name}</span>
             <div className="flex flex-grow justify-end">
               <div onClick={expand}
-                   className="hover:bg-gray-700 hover:bg-opacity-40 rounded-md text-gray-300 cursor-pointer p-1">
+                   className="hover:bg-zinc-700 hover:bg-opacity-40 rounded-md text-zinc-300 cursor-pointer p-1">
                 {/*<ChevronDownIcon
                   className={classNames("w-7 h-7 transform transition ease-in-out duration-200", expanded && "rotate-180")}/>*/}
                 {!expanded && <ViewListIcon className={"w-5 h-5"}/>}
@@ -51,36 +51,36 @@ export const LectureCard = (props: IProps) => {
           <div className={classNames("pt-2 grid gap-2", expanded ? "grid-cols-1" : "grid-cols-2", "select-none")}>
 
             <div className="flex gap-2">
-              <CalendarIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
-              <span className={"flex-grow text-gray-300 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
+              <CalendarIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
+              <span className={"flex-grow text-zinc-300 truncate"}>{moment(lecture.date).format("DD.MM.YYYY")}</span>
             </div>
 
             {lecture.lecturer?.length > 0 &&
             <div className="flex gap-2 inline-block align-middle">
-              <UserIcon className={"text-gray-300 h-5 w-5 flex-none align-bottom bg-"}/>
-              <span className={"flex-grow text-gray-300 truncate"}>{lecture.lecturer}</span>
+              <UserIcon className={"text-zinc-300 h-5 w-5 flex-none align-bottom bg-"}/>
+              <span className={"flex-grow text-zinc-300 truncate"}>{lecture.lecturer}</span>
             </div>
             }
 
             <div className="flex gap-2 inline-block align-middle">
-              <ClockIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
+              <ClockIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
               <span
-                  className={"flex-grow text-gray-300 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && props.percentage &&
-              <span className={"text-gray-500"}>{props.percentage + " %"}</span>}</span>
+                  className={"flex-grow text-zinc-300 truncate"}>{moment(lecture.startTime).format("kk.mm")} - {moment(lecture.endTime).format("kk.mm")} {running && props.percentage &&
+              <span className={"text-zinc-500"}>{props.percentage + " %"}</span>}</span>
             </div>
 
             {lecture.rooms.length > 0 && !expanded &&
             <div className="flex gap-2 inline-block align-middle">
-              <HomeIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
-              <span className={"flex-grow text-gray-300 truncate"}>{lecture.rooms.join(", ")}</span>
+              <HomeIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
+              <span className={"flex-grow text-zinc-300 truncate"}>{lecture.rooms.join(", ")}</span>
             </div>
             }
 
             {lecture.rooms.length > 0 && expanded &&
             lecture.rooms.map(r => (
                 <div className="flex gap-2 inline-block align-middle" key={r}>
-                  <HomeIcon className={"text-gray-300 h-5 w-5 flex-none"}/>
-                  <span className={"flex-grow text-gray-300 truncate"}>{r}</span>
+                  <HomeIcon className={"text-zinc-300 h-5 w-5 flex-none"}/>
+                  <span className={"flex-grow text-zinc-300 truncate"}>{r}</span>
                 </div>
             ))
             }

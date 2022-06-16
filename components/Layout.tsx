@@ -47,7 +47,7 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
         </Head>
         <header>
         </header>
-        <main className="bg-gradient-to-b from-gray-900 to-blueGray-900" style={style}>
+        <main className="bg-gradient-to-b from-zinc-900 to-slate-900" style={style}>
 
           <div className="">
             {children}

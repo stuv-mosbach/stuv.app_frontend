@@ -184,9 +184,9 @@ const CoursePage: NextPage = () => {
 
   const MenuItem = (props: { checked: boolean, content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
     <div onClick={() => {if (props.onClick) props.onClick();}}
-        //dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform cursor-pointer
+        //dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform cursor-pointer
          className={classNames(
-             "block text-sm dark:text-white text-gray-700 cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform",
+             "block text-sm dark:text-white text-zinc-700 cursor-pointer dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform",
              props.rounded,
          )}>
       <label className="inline-flex items-center h-full w-full cursor-pointer">
@@ -276,7 +276,7 @@ const CoursePage: NextPage = () => {
 
         <div
             id={"scrollableDiv"}
-            className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900"
+            className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-slate-900"
             style={{height: "calc(100vh - 52px)"}}
         >
 

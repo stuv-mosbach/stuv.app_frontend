@@ -151,6 +151,7 @@ const CoursePage: NextPage = () => {
         console.log(err);
         router.push("/");
       });
+
     }
   }, [course]);
 
@@ -183,14 +184,14 @@ const CoursePage: NextPage = () => {
 
   const MenuItem = (props: { checked: boolean, content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
     <div onClick={() => {if (props.onClick) props.onClick();}}
-         //dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform cursor-pointer
+         //dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform cursor-pointer
       className={classNames(
-        "block text-sm dark:text-white text-gray-700 cursor-pointer dark:hover:bg-gray-600 hover:bg-gray-200 transition duration-200 ease-in-out transform",
+        "block text-sm dark:text-white text-zinc-700 cursor-pointer dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform",
         props.rounded,
         )}>
       <label className="inline-flex items-center h-full w-full cursor-pointer">
         <div className="px-4 py-2">
-          <input type="checkbox" checked={props.checked} className="form-checkbox rounded-sm text-blue-600 cursor-pointer bg-gray-400" onChange={() => {}} />
+          <input type="checkbox" checked={props.checked} className="form-checkbox rounded-sm text-blue-600 cursor-pointer bg-zinc-400" onChange={() => {}} />
           <span className="ml-2">{props.content}</span>
         </div>
       </label>
@@ -204,8 +205,8 @@ const CoursePage: NextPage = () => {
 
           <div className="absolute z-50 left-1/2 transform -translate-x-1/2 -translate-y-2">
             <div className="flex flex-grow justify-center">
-              <div className="{/*bg-gradient-to-b to-teal-600 from-indigo-600*/} bg-opacity-30 bg-gray-900    pt-2 pb-3 px-8 rounded-xl">
-                <HoverAnimation><span className={"text-gray-200 text-2xl font-semibold select-none"}>{formatCourseName(course ?? "")}</span></HoverAnimation>
+              <div className="{/*bg-gradient-to-b to-teal-600 from-indigo-600*/} bg-opacity-30 bg-zinc-900    pt-2 pb-3 px-8 rounded-xl">
+                <HoverAnimation><span className={"text-zinc-200 text-2xl font-semibold select-none"}>{formatCourseName(course ?? "")}</span></HoverAnimation>
               </div>
             </div>
           </div>
@@ -219,7 +220,7 @@ const CoursePage: NextPage = () => {
 
           <div className={"flex flex-grow justify-end"}>
 
-            <div onClick={openFilter} className="flex px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
+            <div onClick={openFilter} className="flex px-2 py-1 -mx-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden lg:block"}>Filter</span>
 
@@ -253,13 +254,13 @@ const CoursePage: NextPage = () => {
 
             </div>
 
-            <div onClick={toggleAll} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
+            <div onClick={toggleAll} className="flex h-9 px-2 py-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               {!allExpanded && <ViewListIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               {allExpanded && <ViewGridIcon className={"mt-1 h-5 w-5 text-gray-200"} />}
               <span className={"text-xl text-gray-200 hidden lg:block"}>{allExpanded ? "Collapse" : "Expand"}</span>
             </div>
 
-            <div onClick={share} className="flex h-9 px-2 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
+            <div onClick={share} className="flex h-9 px-2 -ml-1 py-1 mr-2 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
               <ShareIcon className={"mt-1 h-5 w-5 text-gray-200"} />
               <span className={"text-xl text-gray-200 hidden lg:block"}>Share</span>
             </div>
@@ -275,7 +276,7 @@ const CoursePage: NextPage = () => {
 
         <div
            id={"scrollableDiv"}
-           className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-blueGray-900"
+           className="w-full overflow-y-scroll scroll-hidden bg-gradient-to-b from-gray-900 to-slate-900"
            style={{height: "calc(100vh - 52px)"}}
         >
 
