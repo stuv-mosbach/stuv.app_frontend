@@ -6,7 +6,7 @@ import axios from "axios";
 import {useRouter} from "next/router";
 import classNames from "classnames";
 import {CourseGroup, CourseTypeGrouped, nameGroupCourses} from "../util/lectureUtils";
-import {SearchIcon} from "@heroicons/react/outline";
+import {SearchIcon, XIcon} from "@heroicons/react/outline";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 import {ChevronDown} from "tabler-icons-react";
 import {expandedClasses} from "../util/cssUtils";
@@ -18,6 +18,17 @@ const Home: NextPage = () => {
   const [courses, setCourses] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [courseList, setCourseList] = useState<{ [key: string]: boolean }>({});
+
+  const [showMessage, setShowMessage] = useState(false);
+  const closeMessage = () => {
+    setShowMessage(false);
+    try {
+      localStorage.setItem("closed_DOZ-REM-MSG", "true");
+    } catch (e) {
+      console.log("Failed to set closed_DOZ-REM-MSG");
+      console.log(e);
+    }
+  }
 
   const [searchString, setSearchString] = useState("");
   const hasQuery = searchString.trim().length > 0;
@@ -65,6 +76,13 @@ const Home: NextPage = () => {
         setCourseList(courseList);
       } catch (e) {
         console.log("Failed to read openedCourses");
+        console.log(e);
+      }
+      try {
+        const raw = localStorage.getItem("closed_DOZ-REM-MSG");
+        if (!raw) setShowMessage(true);
+      } catch (e) {
+        console.log("Failed to read closed_DOZ-REM-MSG");
         console.log(e);
       }
     }
@@ -184,6 +202,34 @@ const Home: NextPage = () => {
 
         {!loading &&
             <div className="flex flex-col flex-grow items-center" style={{height: "100%"}}>
+
+              <div className={classNames("mt-10 bg-red-600 w-full md:w-3/4 w-2/4 px-2 md:px-0 bg-opacity-50 rounded-lg", showMessage ? "" : "hidden")}>
+                <div className="px-4 py-2">
+                  <div className={"flex"}>
+                    <h1 className={"text-gray-200 text-2xl font-bold"}>Wichtige Info:</h1>
+                    <div className="flex flex-grow justify-end">
+                      <div className="text-gray-400 p-1 hover:bg-gray-700 hover:bg-opacity-20 hover:text-gray-200 cursor-pointer rounded-lg"
+                           onClick={closeMessage}
+                      >
+                        <XIcon className={"h-6 w-6"} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="h-px bg-gray-400"/>
+                  <p className={"text-gray-200"}>
+                    Leider dürfen aktuell nicht mehr die Namen der Dozenten angezeigt werden.
+                    Dies liegt an Bestimmungen der DSGVO, die an uns weiter gegeben werden,
+                    Sodass auch wir diese nicht mehr anzeigen dürfen.
+                  </p>
+                  <p className={"text-gray-200"}>
+                    Sollte die Anzeige der Dozenten Namen wieder möglich sein, so werden wir dies auch
+                    schnellstmöglich wieder einführen.
+                  </p>
+                  <p className={"text-gray-300 italic"}>
+                    VG eure StuV
+                  </p>
+                </div>
+              </div>
 
                 <div className="w-full md:w-3/4 px-2 md:px-0">
                     <div className="relative flex w-full flex-wrap items-stretch my-3">
