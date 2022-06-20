@@ -10,6 +10,8 @@ RUN yarn install --frozen-lockfile
 FROM node:alpine AS builder
 
 ENV NEXT_PUBLIC_API_BASE=https://api.stuv.app
+ENV NEXT_PUBLIC_MATOMO_URL=https://matomo.hardtke.tools
+ENV NEXT_PUBLIC_MATOMO_SID=1
 
 WORKDIR /app
 COPY . .

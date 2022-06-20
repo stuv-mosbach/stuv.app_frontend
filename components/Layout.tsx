@@ -1,6 +1,7 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import Head from 'next/head';
 import classNames from "classnames";
+import {useMatomo} from "@datapunt/matomo-tracker-react";
 
 type Props = {
   children?: ReactNode
@@ -14,6 +15,11 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
     const auth = useSelector(selectUserInfo)
     const dispatch = useDispatch();*/
 
+  const { trackPageView, trackEvent } = useMatomo()
+
+  useEffect(() => {
+    trackPageView({});
+  }, [])
 
   let style = {};
   if (disablePullToRefresh) style = {overscrollBehaviorY: "contain"};

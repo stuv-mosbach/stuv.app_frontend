@@ -10,6 +10,7 @@ import {SearchIcon, XIcon} from "@heroicons/react/outline";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 import {ChevronDown} from "tabler-icons-react";
 import {expandedClasses} from "../util/cssUtils";
+import {FooterLinks} from "../components/FooterLinks";
 
 const Home: NextPage = () => {
 
@@ -197,13 +198,13 @@ const Home: NextPage = () => {
   return (
     <Layout>
 
-      <div className={"flex flex-grow justify-center items-center h-screen overflow-y-scroll"}>
+      <div className={"flex flex-row flex-grow justify-center items-center h-screen overflow-y-scroll"}>
         {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"/>}
 
         {!loading &&
             <div className="flex flex-col flex-grow items-center" style={{height: "100%"}}>
 
-              <div className={classNames("mt-10 bg-red-600 w-full md:w-3/4 w-2/4 px-2 md:px-0 bg-opacity-50 rounded-lg", showMessage ? "" : "hidden")}>
+              <div className={classNames("mt-10 bg-red-600 w-full md:w-3/4 px-2  md:px-0 bg-opacity-50 rounded-lg", showMessage ? "" : "hidden")}>
                 <div className="px-4 py-2">
                   <div className={"flex"}>
                     <h1 className={"text-gray-200 text-2xl font-bold"}>Wichtige Info:</h1>
@@ -285,8 +286,13 @@ const Home: NextPage = () => {
                       </div>
                   </div>
               }
+
+              <div className="mt-auto">
+                <FooterLinks />
+              </div>
             </div>
         }
+
       </div>
 
     </Layout>

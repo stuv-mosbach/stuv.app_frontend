@@ -16,6 +16,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import {getNextNElements} from "../util/arrayUtils";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 import {HoverAnimation} from "../components/HoverAnimation";
+import {FooterLinks} from "../components/FooterLinks";
 
 const CoursePage: NextPage = () => {
 
@@ -330,6 +331,8 @@ const CoursePage: NextPage = () => {
             }
 
           </div>
+
+          <FooterLinks />
 
         </div>
 

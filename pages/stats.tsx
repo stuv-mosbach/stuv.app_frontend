@@ -58,7 +58,7 @@ export const StatsPage = () => {
   return (
     <Layout title={"Stats"}>
       <div className={"flex flex-grow justify-center h-screen overflow-y-scroll"}>
-        {loading && <div className="loader ease-linear rounded-full border-8 border-t-8 border-zinc-200 h-64 w-64"/>}
+        {loading && <div className={"my-auto"}><div className="loader ease-linear rounded-full border-8 border-t-8 border-zinc-200 h-64 w-64"/></div>}
         {!loading && notLoading()}
       </div>
     </Layout>
