@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect} from 'react';
 import Head from 'next/head';
 import classNames from "classnames";
-import {useMatomo} from "@datapunt/matomo-tracker-react";
+import {useMatomo} from "@jonkoops/matomo-tracker-react";
 
 type Props = {
   children?: ReactNode
@@ -27,7 +27,7 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
   return (
       <div className={classNames('dark')}>
         <Head>
-          <title>{title ? title + " |" : ""} StuV Vorlesungsplan</title>
+          <title>{`${title ? title + " |" : ""} StuV Vorlesungsplan`}</title>
           <meta charSet="utf-8"/>
           <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
           <meta name="description" content="Vorlesungsplan der DHBW-Mosbach und Bad Mergentheim."/>
