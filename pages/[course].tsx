@@ -192,7 +192,7 @@ const CoursePage: NextPage = () => {
         )}>
       <label className="inline-flex items-center h-full w-full cursor-pointer">
         <div className="px-4 py-2">
-          <input type="checkbox" checked={props.checked} className="form-checkbox rounded-sm text-blue-600 cursor-pointer bg-zinc-400" onChange={() => {}} />
+          <input type="checkbox" checked={props.checked} className="form-checkbox rounded-sm text-blue-600 cursor-pointer bg-zinc-400 mb-1" onChange={() => {}} />
           <span className="ml-2">{props.content}</span>
         </div>
       </label>
