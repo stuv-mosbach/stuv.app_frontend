@@ -292,7 +292,7 @@ const CoursePage: NextPage = () => {
               })}*/}
 
               <InfiniteScroll
-                className={"flex-grow"}
+                className={"flex-grow animate__animated animate__bounceInUp"}
                 style={{width: "100vw"}}
                 dataLength={visibleLectures.length}
                 next={nextScrollLectures}
