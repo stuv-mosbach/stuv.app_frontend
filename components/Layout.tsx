@@ -27,7 +27,7 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
   return (
       <div className={classNames('dark')}>
         <Head>
-          <title>{`${title ? title + " |" : ""} StuV Vorlesungsplan`}</title>
+          <title>{`${title ? title + " |" : ""} DHBW Mosbach Vorlesungsplan`}</title>
           <meta charSet="utf-8"/>
           <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
           <meta name="description" content="Vorlesungsplan der DHBW-Mosbach und Bad Mergentheim."/>
@@ -53,7 +53,7 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
         </Head>
         <header>
         </header>
-        <main className="bg-gradient-to-b from-zinc-900 to-slate-900" style={style}>
+        <main className="bg-gradient-to-b from-zinc-900 to-slate-900 {/*from-zinc-900 to-[#02395e]*/}" style={style}>
 
           <div className="">
             {children}

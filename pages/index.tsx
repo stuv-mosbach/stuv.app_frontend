@@ -11,6 +11,7 @@ import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 import {ChevronDown} from "tabler-icons-react";
 import {expandedClasses} from "../util/cssUtils";
 import {FooterLinks} from "../components/FooterLinks";
+import {GetStaticProps} from "next";
 
 const Home: NextPage = () => {
 
@@ -84,6 +85,20 @@ const Home: NextPage = () => {
         if (!raw) setShowMessage(true);
       } catch (e) {
         console.log("Failed to read closed_DOZ-REM-MSG");
+        console.log(e);
+      }
+      try {
+        const raw = localStorage.getItem("savedCourse");
+        if (raw && router) {
+          // @ts-ignore
+          if (Object.keys(router.components).length == 2) {
+            router.push(raw);
+          } else {
+            //console.log("Is is route change");
+          }
+        }
+      } catch (e) {
+        console.log("Failed to read savedCourse");
         console.log(e);
       }
     }
@@ -298,5 +313,13 @@ const Home: NextPage = () => {
     </Layout>
   )
 }
+
+/*export const getStaticProps : GetStaticProps = (context) =>  {
+  return {
+    props: {},
+    revalidate: 10_000
+  }
+}*/
+
 
 export default Home

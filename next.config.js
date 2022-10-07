@@ -3,6 +3,7 @@
 const withPWA = require('next-pwa')
 
 module.exports = withPWA({
+  swcMinify: true,
   reactStrictMode: true,
   pwa: {
     dest: 'public',
@@ -12,5 +13,13 @@ module.exports = withPWA({
     // scope: '/app',
     // sw: 'service-worker.js',
     //...
+  },
+  rewrites() {
+    return [
+      {
+        source: '/erstis/:path*',
+        destination: '/ersti/:path*',
+      },
+    ]
   }
 })

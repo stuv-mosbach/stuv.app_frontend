@@ -7,7 +7,7 @@ import moment from "moment";
 import 'moment/locale/de'
 import Layout from "../components/Layout";
 import classNames from "classnames";
-import {ArrowLeftIcon} from "@heroicons/react/solid";
+import {ArrowLeftIcon, CogIcon} from "@heroicons/react/solid";
 import Link from 'next/link';
 import {Transition} from '@headlessui/react'
 import {filterType, formatCourseName, getLectureType, groupLectures, lectureType} from "../util/lectureUtils";
@@ -17,6 +17,8 @@ import {getNextNElements} from "../util/arrayUtils";
 import {getRandomAnimal, translateAnimalName} from "../util/animalUtils";
 import {HoverAnimation} from "../components/HoverAnimation";
 import {FooterLinks} from "../components/FooterLinks";
+import {useSpring, animated} from "@react-spring/web";
+import {useDrag} from "@use-gesture/react";
 
 const CoursePage: NextPage = () => {
 
@@ -29,6 +31,7 @@ const CoursePage: NextPage = () => {
   const [filteredLectures, setFilteredLectures] = useState<lectureType[][]>([]);
   const [visibleLectures, setVisibleLectures] = useState<lectureType[][]>([]);
   const [loading, setLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
   const [allExpanded, setAllExpanded] = useState(false);
   const [noLecturesFound, setNoLecturesFound] = useState(false);
 
@@ -123,6 +126,101 @@ const CoursePage: NextPage = () => {
     }
   }, [router.isReady]);
 
+  //Save Course Modal
+  const [aboutToShowSave, setAboutToShowSave] = useState(false);
+  const [showSave, setShowSave] = useState<boolean>();
+  const [hasSavedCourse, setHasSavedCourse] = useState<string | undefined>();
+  const [hasNoSaveInterest, setHasNoSaveInterest] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("savedCourseNotInterested");
+      const savedCourse = localStorage.getItem("savedCourse");
+      if (!raw) {
+        if (!savedCourse) setAboutToShowSave(true);
+      } else {
+        setHasNoSaveInterest(true);
+      }
+    } catch (e) {
+      console.log("Failed to fetch savedCourseNotInterested");
+      console.log(e);
+    }
+
+    try {
+      const savedCourse = localStorage.getItem("savedCourse");
+      setHasSavedCourse(savedCourse ? savedCourse : undefined);
+    } catch (e) {
+      console.log("Failed to fetch savedCourseNotInterested");
+      console.log(e);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (router.isReady && aboutToShowSave && !loading && !showSave) {
+      setAboutToShowSave(false);
+      setTimeout(() => {
+        setShowSave(true);
+      }, 2000)
+    }
+  }, [router.isReady, aboutToShowSave, loading]);
+
+
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }))
+  const bind = useDrag(({ down, movement: [mx, my] }) => {
+    if (Math.abs(mx) > 50 || Math.abs(my) > 50) {
+      api.start({x: down ? mx : 0, y: down ? my : 0, immediate: down})
+      if (Math.abs(mx) > 200 || Math.abs(my) > 200) dismissSaveCourse();
+    }
+  });
+
+  const saveCourse = () => {
+    try {
+      localStorage.setItem("savedCourse", course as string);
+      setShowSave(false);
+      setHasSavedCourse(course as string);
+    } catch (e) {
+      console.log("Failed to set savedCourse");
+      console.log(e);
+    }
+  }
+
+  const deleteSavedCourse = () => {
+    try {
+      setHasSavedCourse(undefined);
+      localStorage.removeItem("savedCourse");
+    } catch (e) {
+      console.log("Failed to delete savedCourse");
+      console.log(e);
+    }
+  }
+
+  const resetNoInterest = () => {
+    try {
+      setShowSave(true);
+      setHasNoSaveInterest(false);
+      localStorage.removeItem("savedCourseNotInterested");
+    } catch (e) {
+      console.log("Failed to delete savedCourseNotInterested");
+      console.log(e);
+    }
+  }
+
+  const dismissSaveCourse = () => {
+    setShowSave(false);
+  }
+
+  const noInterestSaveCourse = () => {
+    setShowSave(false);
+    setHasNoSaveInterest(true);
+    try {
+      localStorage.setItem("savedCourseNotInterested", "true");
+    } catch (e) {
+      console.log("Failed to set savedCourseNotInterested");
+      console.log(e);
+    }
+  }
+
+
   const updateActiveLecture = (lectures : lectureType[][]) => {
     const lactiveLecture = lectures.flatMap(l => l).find(l => moment().isBetween(l.startTime, l.endTime));
 
@@ -147,6 +245,7 @@ const CoursePage: NextPage = () => {
         setOriginalLectures(groupedLectures);
         updateActiveLecture(groupedLectures);
         setLoading(false);
+        setFirstLoad(false);
         setNoLecturesFound(res.data.length === 0);
       }).catch(err => {
         console.log(err);
@@ -187,7 +286,7 @@ const CoursePage: NextPage = () => {
     <div onClick={() => {if (props.onClick) props.onClick();}}
          //dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform cursor-pointer
       className={classNames(
-        "block text-sm dark:text-white text-zinc-700 cursor-pointer dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform",
+        "block text-sm dark:text-white text-zinc-700 cursor-pointer dark:hover:bg-zinc-200 dark:hover:bg-opacity-30 hover:bg-zinc-200 transition duration-200 ease-in-out transform",
         props.rounded,
         )}>
       <label className="inline-flex items-center h-full w-full cursor-pointer">
@@ -197,6 +296,21 @@ const CoursePage: NextPage = () => {
         </div>
       </label>
     </div>
+  );
+
+  const MenuItemNoCheckbox = (props: { content: React.ReactNode, onClick?: () => void, rounded?: string }) => (
+      <div onClick={() => {if (props.onClick) props.onClick();}}
+          //dark:hover:bg-zinc-600 hover:bg-zinc-200 transition duration-200 ease-in-out transform cursor-pointer
+           className={classNames(
+               "block text-sm dark:text-white text-zinc-700 cursor-pointer dark:hover:bg-zinc-200 dark:hover:bg-opacity-30 hover:bg-zinc-200 transition duration-200 ease-in-out transform",
+               props.rounded,
+           )}>
+        <label className="inline-flex items-center h-full w-full cursor-pointer">
+          <div className="px-4 py-2">
+            <span className="">{props.content}</span>
+          </div>
+        </label>
+      </div>
   );
 
   return (
@@ -222,10 +336,10 @@ const CoursePage: NextPage = () => {
           <div className={"flex flex-grow justify-end"}>
 
             <div onClick={openFilter} className="flex px-2 py-1 -mx-1 gap-2 bg-opacity-50 rounded-md cursor-pointer hover:bg-teal-300 hover:bg-opacity-30 select-none transition transform duration-200" >
-              <FilterIcon className={"mt-1 h-5 w-5 text-gray-200"} />
-              <span className={"text-xl text-gray-200 hidden lg:block"}>Filter</span>
+              <CogIcon className={"mt-1 h-5 w-5 text-gray-200"} />
+              <span className={"text-xl text-gray-200 hidden lg:block"}>Settings</span>
 
-              <div ref={filterRef} className={"origin-top-right absolute mt-8 -ml-28 w-48 rounded-md bg-white dark:bg-gray-700 focus:outline-none z-50"}>
+              <div ref={filterRef} className={"origin-top-right absolute mt-10 -ml-28 w-48 rounded-md bg-white dark:bg-gray-700 focus:outline-none z-50"}>
                 <Transition
                     show={showFilter}
                     as={Fragment}
@@ -237,18 +351,32 @@ const CoursePage: NextPage = () => {
                     leaveTo="transform opacity-0 scale-95"
                 >
                   <div className="">
-                    <MenuItem checked={getFilter("normal")} content={"Vorlesungen"} rounded={"rounded-t-md"}  onClick={() => {
-                      toggleFilter("normal");
-                    }} />
-                    <MenuItem checked={getFilter("online")}  content={"Online-Vorlesungen"}  onClick={() => {
-                      toggleFilter("online");
-                    }} />
-                    <MenuItem checked={getFilter("test")}  content={"Prüfungen"}  onClick={() => {
-                      toggleFilter("test");
-                    }} />
-                    <MenuItem checked={getFilter("free")}  content={"Freie Tage"} onClick={() => {
-                      toggleFilter("free");
-                    }} rounded={"rounded-b-md"} />
+                    <div className="">
+                      <h1 className={"text-xl ml-4 mt-2 text-gray-50"} >Filter:</h1>
+                      <MenuItem checked={getFilter("normal")} content={"Vorlesungen"} rounded={""}  onClick={() => {
+                        toggleFilter("normal");
+                      }} />
+                      <MenuItem checked={getFilter("online")}  content={"Online-Vorlesungen"}  onClick={() => {
+                        toggleFilter("online");
+                      }} />
+                      <MenuItem checked={getFilter("test")}  content={"Prüfungen"}  onClick={() => {
+                        toggleFilter("test");
+                      }} />
+                      <MenuItem checked={getFilter("free")}  content={"Freie Tage"} rounded={""} onClick={() => {
+                        toggleFilter("free");
+                      }} />
+                    </div>
+
+                    <div className="">
+                      <h1 className={"text-xl ml-4 mt-2 text-gray-50"}>Course save:</h1>
+
+                      {hasNoSaveInterest && <MenuItemNoCheckbox
+                        content={<span className={""}>Reset no interest</span>} rounded={""} onClick={resetNoInterest}/>}
+                      {hasSavedCourse && <MenuItemNoCheckbox content={<span className={"text-red-700"}>Delete saved course</span>} rounded={"rounded-b-md"} onClick={deleteSavedCourse}/>}
+                      {!hasSavedCourse && <MenuItemNoCheckbox
+                        content={<span className={""}>Save this course</span>} rounded={"rounded-b-md"} onClick={saveCourse}/>}
+
+                    </div>
                   </div>
                 </Transition>
               </div>
@@ -292,7 +420,7 @@ const CoursePage: NextPage = () => {
               })}*/}
 
               <InfiniteScroll
-                className={"flex-grow animate__animated animate__bounceInUp"}
+                className={"flex-grow animate__animated animate__slideInUp"}
                 style={{width: "100vw"}}
                 dataLength={visibleLectures.length}
                 next={nextScrollLectures}
@@ -331,6 +459,40 @@ const CoursePage: NextPage = () => {
             }
 
           </div>
+
+          <animated.div {...bind()} style={{ x, y, touchAction: "none" }}
+                        className={classNames(
+                            "absolute bottom-2 right-2 ml-2 max-w-lg select-none animate__animated animate__bounceIn",
+                            (loading || showSave === undefined) && "hidden",
+                            !showSave && "animate__animated animate__fadeOutDown",
+                            //aboutToShowSave && "animate__animated animate__bounceIn"
+                        )}>
+            <div className="px-3 py-3 bg-sky-900 bg-opacity-95 rounded-lg">
+              <h2 className={"text-xl text-gray-50"}>Kurs speichern ?</h2>
+              <p className={"text-gray-300 mt-2"}>Wenn du diesen Kurs speicherst, öffnet sich beim nächsten Öffnen der Webseite direkt dieser Kurs.</p>
+
+              <div className="mt-3 flex flex-row gap-3 text-gray-50">
+                <div
+                    className="p-2 grow rounded-lg border-2 border-gray-500 bg-gray-500 hover:bg-opacity-50 text-center text-lg cursor-pointer"
+                    onClick={noInterestSaveCourse}
+                >
+                  Nicht erneut fragen
+                </div>
+                <div
+                    className="p-2 grow rounded-lg border-2 border-gray-500 hover:bg-gray-500 hover:bg-opacity-50 text-center text-lg cursor-pointer"
+                    onClick={dismissSaveCourse}
+                >
+                  Nein
+                </div>
+                <div
+                    className="p-2 grow rounded-lg border-2 border-blue-500 hover:bg-blue-500 hover:bg-opacity-50 text-center text-lg cursor-pointer"
+                    onClick={saveCourse}
+                >
+                  Ja
+                </div>
+              </div>
+            </div>
+          </animated.div>
 
           <FooterLinks />
 

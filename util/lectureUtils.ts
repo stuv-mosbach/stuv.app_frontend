@@ -18,6 +18,7 @@ export const groupLectures = (lectures : lectureType[]) => {
   let date = lectures[0].date;
   let list : lectureType[] = [];
   lectures.forEach(l => {
+    l.rooms = l.rooms.map(r => r.replaceAll(/Vorlesungsraum/ig, "").trim())
     if (date.valueOf() === l.date.valueOf()) {
       list.push(l);
     } else {
