@@ -1,6 +1,7 @@
 import Layout from "../components/Layout";
 import React, {useEffect, useState} from "react";
 import {
+  IconBeer,
   IconBrandDiscord,
   IconBrandInstagram,
   IconBrandWhatsapp,
@@ -14,8 +15,8 @@ import {GetStaticProps} from "next";
 
 export const ErstisPage = () => {
 
-/*  const [showBloodDonation, setShowBloodDonation] = useState(moment().isBefore(moment("2022-10-07")));
-  const [showErstiTickets, setShowErstiTickets] = useState(moment().isBefore(moment("2022-10-05")));*/
+  const [showBachelor, setShowBachelor] = useState(moment().isBefore(moment("2022-12-02")));
+  const [showErstiTickets, setShowErstiTickets] = useState(moment().isBefore(moment("2022-12-07")));
 
   return (
       <Layout title={"Erstis"}>
@@ -32,17 +33,17 @@ export const ErstisPage = () => {
 
               <div className={"mt-10 flex flex-col px-2 gap-4"}>
 
-                {/*{showErstiTickets && <a href={"https://stuv-mosbach.de/produkt/erstsemesterparty-wirschaft/"} target={"_blank"}
-                                         className={"p-3 border border-2 border-fuchsia-600 hover:bg-fuchsia-600 hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
-                  <IconTicket className={"h-10 w-10 text-white flex-grow-0"}/>
-                  <div className={"text-2xl text-gray-50 flex-grow"}>Erstiparty Tickets am 04.10.2022</div>
+                {showBachelor && <a href={"https://stuv-mosbach.de/produkt/barbachelor/"} target={"_blank"}
+                                    className={"p-3 border border-2 border-red-600 hover:bg-red-600 hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
+                  <IconBeer className={"h-10 w-10 text-white flex-grow-0"}/>
+                  <div className={"text-2xl text-gray-50 flex-grow"}>Barbachelor am 01.12.2022</div>
                 </a>}
 
-                {showBloodDonation && <a href={"https://terminreservierung.blutspende.de/unternehmen/748211/"} target={"_blank"}
-                    className={"p-3 border border-2 border-red-600 hover:bg-red-600 hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
-                  <IconVaccine className={"h-10 w-10 text-white flex-grow-0"}/>
-                  <div className={"text-2xl text-gray-50 flex-grow"}>Blutspende am 06.10.2022</div>
-                </a>}*/}
+                {showErstiTickets && <a href={"https://stuv-mosbach.de/produkt/erstsemesterparty-technik/"} target={"_blank"}
+                                         className={"p-3 border border-2 border-fuchsia-600 hover:bg-fuchsia-600 hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
+                  <IconTicket className={"h-10 w-10 text-white flex-grow-0"}/>
+                  <div className={"text-2xl text-gray-50 flex-grow"}>Erstiparty Tickets am 06.12.2022</div>
+                </a>}
 
                 <a href={"https://chat.whatsapp.com/GeSZ7EFMilBKoRU2DsokWw"} target={"_blank"} className={"p-3 border border-2 border-[#25D366] hover:bg-[#25D366] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
                   <IconBrandWhatsapp className={"h-10 w-10 text-white flex-grow-0"} />
@@ -65,7 +66,7 @@ export const ErstisPage = () => {
 
                 <a href={"https://stuv.app"} target={"_blank"} className={"p-3 border border-2 border-red-500 hover:bg-red-500 hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
                   <IconCalendarEvent className={"h-10 w-10 text-white flex-grow-0"} />
-                  <div className={"text-2xl text-gray-50 flex-grow"}>StuV Vorlesungsplan</div>
+                  <div className={"text-2xl text-gray-50 flex-grow"}>DHBW Vorlesungsplan</div>
                 </a>
 
                 <a href={"https://www.instagram.com/stuv.mos.mgh.dhbw/"} target={"_blank"} className={"p-3 border border-2 border-[#833AB4] hover:bg-[#833AB4] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
