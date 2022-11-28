@@ -45,7 +45,11 @@ export const ErstisPage = () => {
                   <div className={"text-2xl text-gray-50 flex-grow"}>Erstiparty Tickets am 06.12.2022</div>
                 </a>}
 
-                <a href={"https://chat.whatsapp.com/GeSZ7EFMilBKoRU2DsokWw"} target={"_blank"} className={"p-3 border border-2 border-[#25D366] hover:bg-[#25D366] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
+{/*                <a href={"https://chat.whatsapp.com/GeSZ7EFMilBKoRU2DsokWw"} target={"_blank"} className={"p-3 border border-2 border-[#25D366] hover:bg-[#25D366] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
+                  <IconBrandWhatsapp className={"h-10 w-10 text-white flex-grow-0"} />
+                  <div className={"text-2xl text-gray-50 flex-grow"}>Ersti Whatsapp Gruppe</div>
+                </a>*/}
+                <a href={"https://chat.whatsapp.com/EY9lhoZTqmP1ZM8tEAwPBX"} target={"_blank"} className={"p-3 border border-2 border-[#25D366] hover:bg-[#25D366] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
                   <IconBrandWhatsapp className={"h-10 w-10 text-white flex-grow-0"} />
                   <div className={"text-2xl text-gray-50 flex-grow"}>Ersti Whatsapp Gruppe</div>
                 </a>
