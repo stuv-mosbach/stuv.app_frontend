@@ -2,6 +2,7 @@ import React, {ReactNode, useEffect} from 'react';
 import Head from 'next/head';
 import classNames from "classnames";
 import {useMatomo} from "@jonkoops/matomo-tracker-react";
+import Snowfall from "react-snowfall";
 
 type Props = {
   children?: ReactNode
@@ -54,6 +55,8 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
         <header>
         </header>
         <main className="bg-gradient-to-b from-zinc-900 to-slate-900 {/*from-zinc-900 to-[#02395e]*/}" style={style}>
+
+          <Snowfall />
 
           <div className="">
             {children}

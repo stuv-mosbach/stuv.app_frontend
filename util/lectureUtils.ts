@@ -81,6 +81,8 @@ const nameMap = {
   "TET": "Elektrotechnik",
   "TOEB": "Öffentliches Bauen",
   "TÖB": "Öffentliches Bauen",
+  "TIPB": "International Program in Business",
+  "TIPE": "International Program in Engineering",
 
   "WIN": "BWL - Industrie",
   "WWI": "Wirtschaftsinformatik",
@@ -93,7 +95,7 @@ const nameMap = {
   "WIB": "BWL - International Business",
   "WDBM": "BWL - Digital Business Management",
   "WHI": "BWL - Handel - Internationaler Handel",
-  //"WIPB": "??"
+  "WIPB": "International Program in Business"
 }
 
 export interface CourseGroup {
@@ -139,8 +141,8 @@ export const nameGroupCourses = (courses: string[]) : CourseTypeGrouped => {
 
   const unused = courses.filter(c => !used.has(c));
 
-  grouped.push({name: "Sonstiege", keys: unused.filter(c => c.startsWith("MOS-T") || c.startsWith("MGH-T")), type: "T"});
-  grouped.push({name: "Sonstiege", keys: unused.filter(c => c.startsWith("MOS-W") || c.startsWith("MGH-W") || (!c.startsWith("MOS-T") && !c.startsWith("MGH-T"))), type: "W"});
+  grouped.push({name: "Sonstige", keys: unused.filter(c => c.startsWith("MOS-T") || c.startsWith("MGH-T")), type: "T"});
+  grouped.push({name: "Sonstige", keys: unused.filter(c => c.startsWith("MOS-W") || c.startsWith("MGH-W") || (!c.startsWith("MOS-T") && !c.startsWith("MGH-T"))), type: "W"});
 
   grouped = grouped.filter(g => g.keys.length > 0);
 
