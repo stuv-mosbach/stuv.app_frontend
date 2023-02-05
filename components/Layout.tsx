@@ -56,7 +56,7 @@ const Layout = ({children, title, disablePullToRefresh}: Props) => {
         </header>
         <main className="bg-gradient-to-b from-zinc-900 to-slate-900 {/*from-zinc-900 to-[#02395e]*/}" style={style}>
 
-          <Snowfall />
+          {/*<Snowfall />*/}
 
           <div className="">
             {children}

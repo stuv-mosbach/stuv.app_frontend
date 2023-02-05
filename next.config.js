@@ -25,7 +25,13 @@ module.exports = withPWA({
       },{
         source: '/e/:path*',
         destination: '/ersti/:path*',
-      },
+      },{
+        source: '/nett-hier/:path*',
+        destination: '/netthier/:path*',
+      },{
+        source: '/nett/:path*',
+        destination: '/netthier/:path*',
+      }
     ]
   }
 })
