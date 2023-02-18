@@ -75,7 +75,7 @@ export const ErstisPage = () => {
 
                 <a href={"https://www.instagram.com/stuv.mos.mgh.dhbw/"} target={"_blank"} className={"p-3 border border-2 border-[#833AB4] hover:bg-[#833AB4] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
                   <IconBrandInstagram className={"h-10 w-10 text-white flex-grow-0"} />
-                  <div className={"text-2xl text-gray-50 flex-grow"}>StuV Instagramm</div>
+                  <div className={"text-2xl text-gray-50 flex-grow"}>StuV Instagram</div>
                 </a>
 
               </div>

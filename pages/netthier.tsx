@@ -33,7 +33,7 @@ export const ErstisPage = () => {
               <h1 className={"text-gray-50 font-light text-5xl"}><span className={"font-bold"}>Nett Hier!</span></h1>
               <h1 className={"text-gray-50 font-light text-5xl"}>Aber kennen Sie schon die StuV Mosbach?</h1>
               <h2 className={"text-gray-50 font-light text-2xl mt-5"}>
-                Wenn du einen Sticker gefunden hast, poste gerne ein Bild von Ihm in der Whatsapp Gruppe und/oder auf Instagramm und Markiere uns!
+                Wenn du einen Sticker gefunden hast, poste gerne ein Bild von Ihm in der Whatsapp Gruppe und/oder auf Instagram und markiere uns!
               </h2>
 
               <div className={"mt-10 flex flex-col px-2 gap-4"}>
@@ -50,7 +50,7 @@ export const ErstisPage = () => {
 
                 <a href={"https://www.instagram.com/stuv.mos.mgh.dhbw/"} target={"_blank"} className={"p-3 border border-2 border-[#833AB4] hover:bg-[#833AB4] hover:bg-opacity-30 cursor-pointer rounded-lg flex items-center gap-4"}>
                   <IconBrandInstagram className={"h-10 w-10 text-white flex-grow-0"} />
-                  <div className={"text-2xl text-gray-50 flex-grow"}>StuV Instagramm</div>
+                  <div className={"text-2xl text-gray-50 flex-grow"}>StuV Instagram</div>
                 </a>
 
               </div>
