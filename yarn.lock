@@ -2874,6 +2874,13 @@ react-dom@18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-flip-numbers@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.npmjs.org/react-flip-numbers/-/react-flip-numbers-3.0.7.tgz#4180c219a5670fc81ccd9b7b16b093e01169d69e"
+  integrity sha512-Jm8IBgwNb5jcwqHteoj+WCtRos+J5O8tWMhjNiGUYlawzgU5BWv++RldseQCLrOJKxPzlACn9y/MkRyo+i0zrA==
+  dependencies:
+    react-simple-animate "^3.0.1"
+
 react-infinite-scroll-component@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-6.1.0.tgz#7e511e7aa0f728ac3e51f64a38a6079ac522407f"
@@ -2899,6 +2906,11 @@ react-motion@^0.5.2:
     performance-now "^0.2.0"
     prop-types "^15.5.8"
     raf "^3.1.0"
+
+react-simple-animate@^3.0.1:
+  version "3.5.2"
+  resolved "https://registry.npmjs.org/react-simple-animate/-/react-simple-animate-3.5.2.tgz#ab08865c8bd47872b92bd1e25902326bf7c695b3"
+  integrity sha512-xLE65euP920QMTOmv5haPlml+hmOPDkbIr5WeF7ADIXWBYt5kW/vwpNfWg8EKMab8aeDxIZ6QjffVh8v2dUyhg==
 
 react@18.2.0:
   version "18.2.0"
