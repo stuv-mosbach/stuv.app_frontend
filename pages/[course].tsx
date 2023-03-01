@@ -464,7 +464,7 @@ const CoursePage: NextPage = () => {
                         className={classNames(
                             "absolute bottom-2 right-2 ml-2 max-w-lg select-none animate__animated animate__bounceIn",
                             (loading || showSave === undefined) && "hidden",
-                            !showSave && "animate__animated animate__fadeOutDown",
+                            !showSave && "animate__animated animate__fadeOutDown hidden", //FIXME hidden hides the element immediately
                             //aboutToShowSave && "animate__animated animate__bounceIn"
                         )}>
             <div className="px-3 py-3 bg-sky-900 bg-opacity-95 rounded-lg">

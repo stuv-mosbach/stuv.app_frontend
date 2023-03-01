@@ -7,6 +7,10 @@ import MatomoTracker from "@jonkoops/matomo-tracker";
 
 const App = ({ Component, pageProps }: AppProps) => {
 
+  if (process.env.NODE_ENV === "development") {
+    return <Component {...pageProps} />;
+  }
+
   const instance : MatomoTracker = createInstance({
     urlBase: process.env.NEXT_PUBLIC_MATOMO_URL as string,
     siteId: parseInt(process.env.NEXT_PUBLIC_MATOMO_SID as string),
