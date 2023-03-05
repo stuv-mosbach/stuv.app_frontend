@@ -21,13 +21,24 @@ const Home: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [courseList, setCourseList] = useState<{ [key: string]: boolean }>({});
 
-  const [showMessage, setShowMessage] = useState(false);
-  const closeMessage = () => {
-    setShowMessage(false);
+  const [showDozRemMessage, setShowDozRemMessage] = useState(false);
+  const closeDozRemMessage = () => {
+    setShowDozRemMessage(false);
     try {
       localStorage.setItem("closed_DOZ-REM-MSG", "true");
     } catch (e) {
       console.log("Failed to set closed_DOZ-REM-MSG");
+      console.log(e);
+    }
+  }
+
+  const [showDozAddMessage, setShowDozAddMessage] = useState(false);
+  const closeDozAddMessage = () => {
+    setShowDozAddMessage(false);
+    try {
+      localStorage.setItem("closed_DOZ-ADD-MSG", "true");
+    } catch (e) {
+      console.log("Failed to set closed_DOZ-ADD-MSG");
       console.log(e);
     }
   }
@@ -80,11 +91,18 @@ const Home: NextPage = () => {
         console.log("Failed to read openedCourses");
         console.log(e);
       }
-      try {
+      /*try {
         const raw = localStorage.getItem("closed_DOZ-REM-MSG");
-        if (!raw) setShowMessage(true);
+        if (!raw) setShowDozRemMessage(true);
       } catch (e) {
         console.log("Failed to read closed_DOZ-REM-MSG");
+        console.log(e);
+      }*/
+      try {
+        const raw = localStorage.getItem("closed_DOZ-ADD-MSG");
+        if (!raw) setShowDozAddMessage(true);
+      } catch (e) {
+        console.log("Failed to read closed_DOZ-ADD-MSG");
         console.log(e);
       }
       try {
@@ -219,13 +237,13 @@ const Home: NextPage = () => {
         {!loading &&
             <div className="flex flex-col flex-grow items-center" style={{height: "100%"}}>
 
-              <div className={classNames("mt-10 bg-red-600 w-full md:w-3/4 px-2  md:px-0 bg-opacity-50 rounded-lg", showMessage ? "" : "hidden")}>
+              <div className={classNames("mt-10 bg-red-600 w-full md:w-3/4 px-2  md:px-0 bg-opacity-50 rounded-lg", showDozRemMessage ? "" : "hidden")}>
                 <div className="px-4 py-2">
                   <div className={"flex"}>
                     <h1 className={"text-gray-200 text-2xl font-bold"}>Wichtige Info:</h1>
                     <div className="flex flex-grow justify-end">
                       <div className="text-gray-400 p-1 hover:bg-gray-700 hover:bg-opacity-20 hover:text-gray-200 cursor-pointer rounded-lg"
-                           onClick={closeMessage}
+                           onClick={closeDozRemMessage}
                       >
                         <XIcon className={"h-6 w-6"} />
                       </div>
@@ -242,8 +260,37 @@ const Home: NextPage = () => {
                     schnellstmöglich wieder einführen.
                   </p>
                   <p className={"text-gray-300 italic"}>
-                    VG eure StuV
+                    VG Max
                   </p>
+                </div>
+              </div>
+
+              <div className={classNames("mt-10 bg-green-600 w-full md:w-3/4 px-2  md:px-0 bg-opacity-50 rounded-lg", showDozAddMessage ? "" : "hidden")}>
+                <div className="px-4 py-2">
+                  <div className={"flex"}>
+                    <h1 className={"text-gray-200 text-2xl font-bold"}>Gute Neuigkeiten:</h1>
+                    <div className="flex flex-grow justify-end">
+                      <div className="text-gray-400 p-1 hover:bg-gray-700 hover:bg-opacity-20 hover:text-gray-200 cursor-pointer rounded-lg"
+                           onClick={closeDozRemMessage}
+                      >
+                        <XIcon className={"h-6 w-6"} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="h-px bg-gray-400"/>
+                  <div className="mt-2 gap-2 grid">
+                    <p className={"text-gray-200"}>
+                      Die Namen der Dozenten werden ab sofort wieder angezeigt, wenn ihr die Seite <span className={"font-semibold"}>innerhalb des Netzes der DHBW</span> öffnet.
+                      Also wenn ihr mit dem WLAN der DHBW verbunden seit.
+                    </p>
+                    <p className={"text-gray-200"}>
+                      Sobald ihr die Seite einmal aus dem Netz der DHBW geöffnet habt, könnt Ihr die Namen der Dozenten für 30 Tage weiterhin sehen.
+                      Dafür wird ein Cookie gesetzt, der die Anzeige der Dozenten Namen für 30 Tage erlaubt. Sollte euer Gerät keine Cookies zulassen, funktioniert dies leider nicht.
+                    </p>
+                    <p className={"text-gray-300 italic"}>
+                      VG Max
+                    </p>
+                  </div>
                 </div>
               </div>
 

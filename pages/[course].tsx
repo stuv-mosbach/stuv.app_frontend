@@ -240,7 +240,7 @@ const CoursePage: NextPage = () => {
 
   useEffect(() => {
     if (course) {
-      axios.get<lectureType[]>(`${process.env.NEXT_PUBLIC_API_BASE}/rapla/lectures/${course}`).then(res => {
+      axios.get<lectureType[]>(`${process.env.NEXT_PUBLIC_API_BASE}/rapla/lectures/${course}`, {withCredentials: true}).then(res => {
         const groupedLectures = groupLectures(res.data);
         setOriginalLectures(groupedLectures);
         updateActiveLecture(groupedLectures);

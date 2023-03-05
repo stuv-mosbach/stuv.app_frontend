@@ -83,6 +83,7 @@ const nameMap = {
   "TÖB": "Öffentliches Bauen",
   "TIPB": "International Program in Business",
   "TIPE": "International Program in Engineering",
+  "TSTK": "Studienkolleg",
 
   "WIN": "BWL - Industrie",
   "WWI": "Wirtschaftsinformatik",

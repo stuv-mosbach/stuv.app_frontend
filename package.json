@@ -1,22 +1,22 @@
 {
   "name": "stuv.app_frontend",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "docker:build": "docker build -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.6 .",
+    "docker:build": "docker build -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.7 .",
     "docker:build:ws": "docker build -t maxdola/stuv.app_frontend:webservices .",
-    "docker:build:beta": "docker build -t maxdola/stuv.app_frontend:beta -t maxdola/stuv.app_frontend:0.1.6-beta .",
+    "docker:build:beta": "docker build -t maxdola/stuv.app_frontend:beta -t maxdola/stuv.app_frontend:0.1.7-beta .",
     "docker:push": "docker push maxdola/stuv.app_frontend --all-tags",
     "docker:run": "yarn docker:build && yarn docker:push",
     "docker:run:ws": "yarn docker:build:ws && yarn docker:push",
     "docker:run:beta": "yarn docker:build:beta && yarn docker:push",
-    "docker:ma:build": "docker buildx build --platform linux/amd64,linux/arm64 -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.6 .",
-    "docker:ma:prod": "docker buildx build --platform linux/amd64,linux/arm64 --push -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.6 .",
-    "docker:ma:beta": "docker buildx build --platform linux/amd64,linux/arm64 --push -t maxdola/stuv.app_frontend:beta -t maxdola/stuv.app_frontend:0.1.6-beta ."
+    "docker:ma:build": "docker buildx build --platform linux/amd64,linux/arm64 -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.7 .",
+    "docker:ma:prod": "docker buildx build --platform linux/amd64,linux/arm64 --push -t maxdola/stuv.app_frontend:latest -t maxdola/stuv.app_frontend:0.1.7 .",
+    "docker:ma:beta": "docker buildx build --platform linux/amd64,linux/arm64 --push -t maxdola/stuv.app_frontend:beta -t maxdola/stuv.app_frontend:0.1.7-beta ."
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",

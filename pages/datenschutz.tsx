@@ -32,7 +32,7 @@ export const DatenschutzPage = () => {
 
         </div>
 
-        <div className={"min-h-screen container mx-auto pt-5 text-gray-200"}>
+        <div className={"min-h-screen container mx-auto pt-5 text-gray-200"} id={"dsgvo"}>
 
           <h2>Datenschutzerklärung</h2> <p>Personenbezogene Daten (nachfolgend zumeist nur „Daten“ genannt) werden von
           uns nur im Rahmen der Erforderlichkeit sowie zum Zwecke der Bereitstellung eines funktionsfähigen und
