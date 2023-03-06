@@ -271,7 +271,7 @@ const Home: NextPage = () => {
                     <h1 className={"text-gray-200 text-2xl font-bold"}>Gute Neuigkeiten:</h1>
                     <div className="flex flex-grow justify-end">
                       <div className="text-gray-400 p-1 hover:bg-gray-700 hover:bg-opacity-20 hover:text-gray-200 cursor-pointer rounded-lg"
-                           onClick={closeDozRemMessage}
+                           onClick={closeDozAddMessage}
                       >
                         <XIcon className={"h-6 w-6"} />
                       </div>
